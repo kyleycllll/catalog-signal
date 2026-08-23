@@ -1,0 +1,8 @@
+[
+  {"id":"demo-backpack-1","title":"Classic Black Laptop Backpack","description":"Black everyday backpack with padded 15 inch laptop sleeve and water bottle pockets.","category":"backpack","brand":"Demo Supply","colour":"black","attributes":["university","laptop sleeve","water resistant"],"price":59.0,"locale":"us"},
+  {"id":"demo-backpack-2","title":"Large Campus Book Bag","description":"Roomy charcoal backpack for books, notebooks and a laptop.","category":"backpack","brand":"Demo Supply","colour":"charcoal","attributes":["university","laptop sleeve"],"price":72.0,"locale":"us"},
+  {"id":"demo-backpack-3","title":"Leather Commuter Rucksack","description":"Premium black leather rucksack for commuting.","category":"backpack","brand":"Demo Leather","colour":"black","attributes":["commuter"],"price":149.0,"locale":"us"},
+  {"id":"demo-sleeve-1","title":"Padded 15 Inch Laptop Sleeve","description":"Protective black laptop sleeve that complements a backpack.","category":"laptop sleeve","brand":"Demo Tech","colour":"black","attributes":["padded"],"price":24.0,"locale":"us"},
+  {"id":"demo-bottle-1","title":"Insulated Campus Water Bottle","description":"Reusable bottle for class and commuting.","category":"water bottle","brand":"Demo Hydrate","colour":"black","attributes":["university"],"price":22.0,"locale":"us"},
+  {"id":"demo-handbag-1","title":"Small Evening Handbag","description":"Compact red handbag for evening events.","category":"handbag","brand":"Demo Style","colour":"red","attributes":["evening"],"price":48.0,"locale":"us"}
+]

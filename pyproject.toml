@@ -1,0 +1,27 @@
+[project]
+name = "adaptive-product-search-agent"
+version = "0.2.0"
+description = "Measured ESCI product-search retrieval and QLoRA relevance reranking"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.115,<1.0",
+  "uvicorn[standard]>=0.30,<1.0",
+  "pydantic>=2.8,<3.0",
+  "numpy>=1.26,<3.0",
+  "python-multipart>=0.0.9",
+  "httpx>=0.27,<1.0",
+  "python-dotenv>=1.0,<2.0",
+]
+
+[project.optional-dependencies]
+data = ["pandas>=2.2", "pyarrow>=17.0", "scikit-learn>=1.5"]
+retrieval = ["sentence-transformers>=3.0", "faiss-cpu>=1.8"]
+ml = ["transformers>=4.45", "torch>=2.4", "peft>=0.13", "datasets>=3.0", "bitsandbytes>=0.44"]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100

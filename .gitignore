@@ -1,0 +1,15 @@
+.venv/
+.venv-esci/
+__pycache__/
+.pytest_cache/
+.DS_Store
+.env
+data/sessions.json
+data/uploads/
+data/indexes/
+data/raw/
+data/processed/
+models/
+*.egg-info/
+frontend/node_modules/
+frontend/dist/

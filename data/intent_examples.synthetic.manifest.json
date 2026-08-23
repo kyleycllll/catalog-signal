@@ -1,0 +1,7 @@
+{
+  "source_type": "synthetic_catalog_grounded",
+  "catalog": "data/processed/products.json",
+  "products": 141,
+  "examples": 543,
+  "warning": "Do not use this synthetic corpus as a final evaluation set or claim human-labelled performance."
+}

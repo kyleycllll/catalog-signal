@@ -1,0 +1,10 @@
+{
+  "source": "data\\intent_examples.synthetic.jsonl",
+  "seed": 42,
+  "counts": {
+    "train": 443,
+    "validation": 42,
+    "test": 58
+  },
+  "leakage_checked": true
+}

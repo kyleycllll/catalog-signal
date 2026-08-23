@@ -1,0 +1,16 @@
+{
+  "catalog_path": "data/processed/esci_products.json",
+  "evaluation_jsonl": "data/esci/test.jsonl",
+  "dense_index_path": "data/indexes/text_embeddings.faiss",
+  "output_dir": "reports/experiments/esci-held-out",
+  "candidate_k": 40,
+  "training_metadata_path": "reports/training/hard_negative_run.json",
+  "systems": [
+    {"name": "BM25", "strategy": "bm25", "rerank": false},
+    {"name": "Dense", "strategy": "dense", "rerank": false},
+    {"name": "Hybrid RRF", "strategy": "hybrid", "rerank": false},
+    {"name": "BM25 + QLoRA", "strategy": "bm25", "rerank": true},
+    {"name": "Dense + QLoRA", "strategy": "dense", "rerank": true},
+    {"name": "Hybrid RRF + QLoRA", "strategy": "hybrid", "rerank": true}
+  ]
+}
