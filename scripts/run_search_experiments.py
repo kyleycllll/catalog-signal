@@ -68,9 +68,9 @@ async def evaluate_system(
         raise RuntimeError("QLoRA reranking was requested but no FINETUNED_MODEL_URL is configured")
     if rerank:
         await client.health()
-    query_local_labels: list[list[str]] = []
-    global_ranked_ids: list[list[str]] = []
-    global_relevant_ids: list[set[str]] = []
+    retrieved_judged_pool_labels: list[list[str]] = []
+    ranked_ids_by_query: list[list[str]] = []
+    known_relevant_ids_by_query: list[set[str]] = []
     retrieval_latencies: list[float] = []
     rerank_latencies: list[float] = []
     for case in cases:
@@ -94,22 +94,36 @@ async def evaluate_system(
             ranked = rank_without_reranker(candidates)
         ranked_ids = [row.product.id for row in ranked]
         labels = case["labels"]
-        local = [labels[product_id] for product_id in ranked_ids if product_id in labels]
-        if local:
-            query_local_labels.append(local)
-        global_ranked_ids.append(ranked_ids)
-        global_relevant_ids.append({product_id for product_id, label in labels.items() if label in {"E", "S"}})
-    if not query_local_labels:
-        raise RuntimeError("No judged candidates were retrieved; cannot calculate ranking metrics")
+        # This is intentionally an explicit *judged-pool* diagnostic. It removes
+        # unjudged candidates only after end-to-end coverage has been captured
+        # below, and must never be reported as full-catalog NDCG/MRR.
+        judged_pool = [labels[product_id] for product_id in ranked_ids if product_id in labels]
+        if judged_pool:
+            retrieved_judged_pool_labels.append(judged_pool)
+        ranked_ids_by_query.append(ranked_ids)
+        known_relevant_ids_by_query.append(
+            {product_id for product_id, label in labels.items() if label in {"E", "S"}}
+        )
+    if not retrieved_judged_pool_labels:
+        raise RuntimeError(
+            "No judged candidates were retrieved; cannot calculate judged-pool ranking metrics"
+        )
     return {
         "name": name,
         "status": "completed",
         "strategy": strategy,
         "reranking": rerank,
-        "sample": {"queries": len(cases), "queries_with_judged_retrieval": len(query_local_labels)},
+        "sample": {
+            "queries": len(cases),
+            "queries_with_judged_retrieval": len(retrieved_judged_pool_labels),
+        },
         "metrics": {
-            "query_local_judged_ranking": ranking_metrics_from_labels(query_local_labels),
-            "global_candidate_coverage": retrieval_metrics(global_ranked_ids, global_relevant_ids),
+            "observed_candidate_coverage": retrieval_metrics(
+                ranked_ids_by_query, known_relevant_ids_by_query
+            ),
+            "retrieved_judged_pool_ranking": ranking_metrics_from_labels(
+                retrieved_judged_pool_labels
+            ),
         },
         "latency_ms": {
             "candidate_generation": latency_summary(retrieval_latencies),
@@ -120,21 +134,23 @@ async def evaluate_system(
 
 def summary_table(results: list[dict[str, Any]]) -> str:
     lines = [
-        "| System | Status | Recall@5 | MRR | nDCG@10 | Candidate p50 | Rerank p50 |",
-        "| --- | --- | ---: | ---: | ---: | ---: | ---: |",
+        "| System | Status | Observed Recall@5 | Observed Hit@5 | Observed MRR | Judged-pool nDCG@10 | Candidate p50 | Rerank p50 |",
+        "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
     for row in results:
         if row["status"] != "completed":
-            lines.append(f"| {row['name']} | unavailable | — | — | — | — | — |")
+            lines.append(f"| {row['name']} | unavailable | — | — | — | — | — | — |")
             continue
-        metrics = row["metrics"]["query_local_judged_ranking"]
+        coverage = row["metrics"]["observed_candidate_coverage"]
+        judged_pool = row["metrics"]["retrieved_judged_pool_ranking"]
         latency = row["latency_ms"]
         lines.append(
-            "| {name} | completed | {recall:.4f} | {mrr:.4f} | {ndcg:.4f} | {candidate} ms | {rerank} ms |".format(
+            "| {name} | completed | {recall:.4f} | {hit_rate:.4f} | {mrr:.4f} | {ndcg:.4f} | {candidate} ms | {rerank} ms |".format(
                 name=row["name"],
-                recall=metrics.get("recall_at_5", 0.0),
-                mrr=metrics.get("mrr", 0.0),
-                ndcg=metrics.get("ndcg_at_10", 0.0),
+                recall=coverage.get("recall_at_5", 0.0),
+                hit_rate=coverage.get("hit_rate_at_5", 0.0),
+                mrr=coverage.get("mrr", 0.0),
+                ndcg=judged_pool.get("judged_pool_ndcg_at_10", 0.0),
                 candidate=latency["candidate_generation"]["p50_ms"] or "—",
                 rerank=latency["qlora_reranking"]["p50_ms"] or "—",
             )
@@ -193,7 +209,12 @@ async def run(config: dict[str, Any], output_dir: Path) -> dict[str, Any]:
             "evaluation_jsonl": str(cases_path),
             "catalog_products": len(products),
             "queries": len(cases),
-            "judgment_note": "Global coverage treats unjudged products as non-relevant; local ranking uses only retrieved judged products.",
+            "judgment_note": (
+                "Observed candidate coverage uses known E/S judgments at original ranks; "
+                "unjudged products are not assigned a label. Recall/precision are catalog-wide "
+                "only with complete judgments. Judged-pool ranking is a separate diagnostic over "
+                "the retrieved judged subset and is not full-catalog NDCG/MRR."
+            ),
         },
         "dense_index": None if index_metadata is None else {
             "model_name": index_metadata.model_name,

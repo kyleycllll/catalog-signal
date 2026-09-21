@@ -7,9 +7,9 @@ from __future__ import annotations
 
 import hashlib
 import json
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, fields
 from pathlib import Path
-from typing import Iterable
+from typing import Any, Iterable, Mapping
 
 import numpy as np
 
@@ -34,14 +34,26 @@ def hash_embed(text: str, dimensions: int = 384) -> np.ndarray:
     return vector / norm if norm else vector
 
 
-def catalog_fingerprint(products: Iterable[Product]) -> str:
+def catalog_fingerprint_from_texts(id_text_pairs: Iterable[tuple[str, str]]) -> str:
+    """Fingerprint (product ID, retrieval text) pairs, independent of input order."""
     digest = hashlib.sha256()
-    for product in sorted(products, key=lambda row: row.id):
-        digest.update(product.id.encode("utf-8"))
+    for product_id, text in sorted(id_text_pairs, key=lambda row: row[0]):
+        digest.update(product_id.encode("utf-8"))
         digest.update(b"\0")
-        digest.update(product_text(product).encode("utf-8"))
+        digest.update(text.encode("utf-8"))
         digest.update(b"\n")
     return digest.hexdigest()
+
+
+def catalog_fingerprint(products: Iterable[Product]) -> str:
+    return catalog_fingerprint_from_texts((product.id, product_text(product)) for product in products)
+
+
+def catalog_fingerprint_from_records(records: Iterable[Mapping[str, Any]]) -> str:
+    """Same fingerprint as ``catalog_fingerprint`` for Product-schema dictionaries."""
+    return catalog_fingerprint_from_texts(
+        (str(record["id"]), product_text(Product.model_validate(record))) for record in records
+    )
 
 
 @dataclass(frozen=True)
@@ -51,10 +63,25 @@ class IndexMetadata:
     product_count: int
     catalog_fingerprint: str
     backend: str = "faiss.IndexFlatIP"
+    normalized: bool = True
+    similarity: str = "inner product of L2-normalized vectors (cosine)"
+    text_representation: str = "product_discovery.retrieval.product_text"
+    encode_dtype: str | None = None
+    encode_device: str | None = None
+    max_seq_length: int | None = None
+    built_at: str | None = None
+    source_manifest: str | None = None
+    source_manifest_sha256: str | None = None
+    catalog_path: str | None = None
 
     @property
     def version(self) -> str:
         return f"{self.model_name}:{self.catalog_fingerprint[:12]}"
+
+    @classmethod
+    def from_dict(cls, raw: Mapping[str, Any]) -> "IndexMetadata":
+        known = {field.name for field in fields(cls)}
+        return cls(**{key: value for key, value in raw.items() if key in known})
 
 
 class FaissTextEmbeddingIndex:
@@ -116,6 +143,29 @@ class FaissTextEmbeddingIndex:
         )
         return cls([product.id for product in products], index, metadata)
 
+    @classmethod
+    def from_vectors(
+        cls, ids: list[str], vectors: np.ndarray, metadata: IndexMetadata
+    ) -> "FaissTextEmbeddingIndex":
+        """Create an IndexFlatIP from precomputed normalized vectors (e.g. a chunked build)."""
+        vectors = np.ascontiguousarray(vectors, dtype=np.float32)
+        if vectors.ndim != 2 or vectors.shape != (len(ids), metadata.dimensions):
+            raise DenseIndexUnavailable("Vector matrix shape does not match IDs and metadata")
+        if len(set(ids)) != len(ids) or len(ids) != metadata.product_count:
+            raise DenseIndexUnavailable("Dense index IDs must be unique and match the product count")
+        norms = np.linalg.norm(vectors, axis=1)
+        if metadata.normalized and not np.allclose(norms, 1.0, atol=1e-3):
+            raise DenseIndexUnavailable("Vectors declared normalized are not unit length")
+        index = cls._faiss().IndexFlatIP(metadata.dimensions)
+        index.add(vectors)
+        return cls(list(ids), index, metadata)
+
+    def validate_catalog_fingerprint(self, fingerprint: str) -> None:
+        if fingerprint != self.metadata.catalog_fingerprint:
+            raise DenseIndexUnavailable(
+                "Dense index catalog fingerprint does not match the loaded catalog; rebuild the index."
+            )
+
     @staticmethod
     def metadata_path(path: str | Path) -> Path:
         target = Path(path)
@@ -138,10 +188,12 @@ class FaissTextEmbeddingIndex:
         if not source.exists() or not cls.metadata_path(source).exists():
             raise DenseIndexUnavailable(f"Dense index or metadata is missing at {source}")
         raw = json.loads(cls.metadata_path(source).read_text(encoding="utf-8"))
-        metadata = IndexMetadata(**raw["metadata"])
+        metadata = IndexMetadata.from_dict(raw["metadata"])
         ids = [str(value) for value in raw["ids"]]
         if len(ids) != metadata.product_count:
             raise DenseIndexUnavailable("Dense index metadata product count does not match its ID mapping")
+        if len(set(ids)) != len(ids):
+            raise DenseIndexUnavailable("Dense index ID mapping contains duplicate product IDs")
         if products is not None and metadata.catalog_fingerprint != catalog_fingerprint(products):
             raise DenseIndexUnavailable(
                 "Dense index catalog fingerprint does not match the loaded catalog; rebuild the index."
@@ -178,9 +230,10 @@ class FaissTextEmbeddingIndex:
             product_id = self.ids[int(position)]
             if allowed_ids is None or product_id in allowed_ids:
                 result.append((product_id, float(score)))
-            if len(result) == top_k:
-                break
-        return result
+        # FAISS returns exact score ties (e.g. duplicate listings) in an order that
+        # depends on fetch size; break them by product ID for deterministic rankings.
+        result.sort(key=lambda row: (-row[1], row[0]))
+        return result[:top_k]
 
 
 class InMemoryDenseIndex:

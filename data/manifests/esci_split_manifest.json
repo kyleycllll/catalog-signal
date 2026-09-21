@@ -1,0 +1,176 @@
+{
+  "catalog": {
+    "content_fingerprint": "d63ef57d3905189945d68f4ea18abbc325f59483b9660250e368dbafbeb2ea11",
+    "content_fingerprint_definition": "sha256 over products sorted by ID of id + NUL + retrieval.product_text(Product) + newline; identical to embeddings.catalog_fingerprint and independent of file encoding",
+    "limitation": "The ESCI product corpus is the union of products that were judged for some ESCI query; it is not the full Amazon catalog. Product overlap across query splits is retained and reported because catalog documents are shared by all queries; test-query labels are not used for training, tuning, or system selection.",
+    "path": "data/processed/esci_us_products.parquet",
+    "products": 1215854,
+    "scope": "full_locale",
+    "selection": "Every official us-locale product in the ESCI product corpus (all labelled products of both small and large versions). Built without reading any label.",
+    "sft_sample_cross_split_product_overlap": {
+      "train_test": 18,
+      "train_validation": 19,
+      "validation_test": 8
+    },
+    "sha256": "16c23420341da6948b39d9c210da0e7cfbb1912038a6e833b34992f86bb2b99e"
+  },
+  "created_at": "2026-09-21T07:00:57.039354+00:00",
+  "labels": {
+    "cross_split_labelled_product_overlap": {
+      "train_test": 32499,
+      "train_validation": 9329,
+      "validation_test": 6115
+    },
+    "path": "data/esci/labels.parquet",
+    "relevance_definition": "E and S are retrieval-relevant; graded gains E=3, S=2, C=1, I=0",
+    "scope": "every us small_version=1 labelled pair, all prepared splits",
+    "sha256": "759021155e657b7e93f3b1a955358c9786cbacc595582b2b33346e23bc0c2e17",
+    "splits": {
+      "test": {
+        "label_counts": {
+          "C": 8099,
+          "E": 79708,
+          "I": 30331,
+          "S": 63563
+        },
+        "product_ids": 164900,
+        "queries_with_known_e_or_s": 8956,
+        "queries_without_known_e_or_s": 0,
+        "query_ids": 8956,
+        "rows": 181701
+      },
+      "train": {
+        "label_counts": {
+          "C": 17012,
+          "E": 163364,
+          "I": 64373,
+          "S": 132257
+        },
+        "product_ids": 320018,
+        "queries_with_known_e_or_s": 18756,
+        "queries_without_known_e_or_s": 0,
+        "query_ids": 18756,
+        "rows": 377006
+      },
+      "validation": {
+        "label_counts": {
+          "C": 2078,
+          "E": 18455,
+          "I": 6743,
+          "S": 15371
+        },
+        "product_ids": 41272,
+        "queries_with_known_e_or_s": 2132,
+        "queries_without_known_e_or_s": 0,
+        "query_ids": 2132,
+        "rows": 42647
+      }
+    }
+  },
+  "preparation": {
+    "code_revision": "7424dbb3790e320f891592005a01a0eb9b9f12b4",
+    "label_vocabulary": [
+      "C",
+      "E",
+      "I",
+      "S"
+    ],
+    "sampling_policy": "deterministic complete query groups up to each split row budget",
+    "script_sha256": "8dcce2b6548181f3625a457607ea2e675c9b56b302e20b6720c8e5f47c1d6db7",
+    "seed": 42,
+    "split_policy": "official test queries preserved; non-test query IDs hashed into train/validation"
+  },
+  "query_split_integrity": {
+    "all_source_queries": {
+      "test": 8956,
+      "train": 18756,
+      "validation": 2132
+    },
+    "labels_validated": true,
+    "official_test_queries_final_only": true,
+    "prepared_queries": {
+      "test": 53,
+      "train": 494,
+      "validation": 46
+    },
+    "query_sets_disjoint": true
+  },
+  "sft_samples": {
+    "test": {
+      "label_counts": {
+        "C": 24,
+        "E": 418,
+        "I": 179,
+        "S": 377
+      },
+      "path": "data/esci/test.jsonl",
+      "product_ids": 998,
+      "query_ids": 53,
+      "rows": 998,
+      "sha256": "51b8d6bc76db3f1408aca1bb26c2a43a7425af0b348732e94c79af894e9efb69"
+    },
+    "train": {
+      "label_counts": {
+        "C": 503,
+        "E": 4408,
+        "I": 1582,
+        "S": 3507
+      },
+      "path": "data/esci/train.jsonl",
+      "product_ids": 9935,
+      "query_ids": 494,
+      "rows": 10000,
+      "sha256": "ef56ae3527cb14aaa7f5ceec680225de7acfeefb1a29c2ac6931f630d9ccc707"
+    },
+    "validation": {
+      "label_counts": {
+        "C": 46,
+        "E": 371,
+        "I": 236,
+        "S": 347
+      },
+      "path": "data/esci/validation.jsonl",
+      "product_ids": 999,
+      "query_ids": 46,
+      "rows": 1000,
+      "sha256": "57bc8ef616c9a17fd0430497ee432b87b5a0201eb41095f7d406d33e38091987"
+    }
+  },
+  "source": {
+    "dataset_revision": "7916cdf6ab75a462e77f20ab40428a10923998d5",
+    "examples_path": "/private/tmp/esci-data/shopping_queries_dataset/shopping_queries_dataset_examples.parquet",
+    "examples_rows_all_locales": 2621288,
+    "examples_sha256": "4a735b693b4a424a6fc67f5be6e4c811495c488bbf66d02a602d308b2744263a",
+    "files": {
+      "examples": {
+        "bytes": 51286808,
+        "filename": "shopping_queries_dataset_examples.parquet",
+        "git_lfs_pointer": {
+          "oid": "4a735b693b4a424a6fc67f5be6e4c811495c488bbf66d02a602d308b2744263a",
+          "size": 51286808
+        },
+        "matches_git_lfs_pointer": true,
+        "path": "/private/tmp/esci-data/shopping_queries_dataset/shopping_queries_dataset_examples.parquet",
+        "sha256": "4a735b693b4a424a6fc67f5be6e4c811495c488bbf66d02a602d308b2744263a"
+      },
+      "products": {
+        "bytes": 1108857465,
+        "filename": "shopping_queries_dataset_products.parquet",
+        "git_lfs_pointer": {
+          "oid": "25124442d064d64b26f74082d6fa09438d679efc0c183cf28d19064a2b65a265",
+          "size": 1108857465
+        },
+        "matches_git_lfs_pointer": true,
+        "path": "/private/tmp/esci-data/shopping_queries_dataset/shopping_queries_dataset_products.parquet",
+        "sha256": "25124442d064d64b26f74082d6fa09438d679efc0c183cf28d19064a2b65a265"
+      }
+    },
+    "license": "Apache-2.0",
+    "locale": "us",
+    "name": "amazon-science/esci-data",
+    "products_path": "/private/tmp/esci-data/shopping_queries_dataset/shopping_queries_dataset_products.parquet",
+    "products_sha256": "25124442d064d64b26f74082d6fa09438d679efc0c183cf28d19064a2b65a265",
+    "repository": "https://github.com/amazon-science/esci-data",
+    "subset": "small_version=1"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "run_date": "2026-09-07",
+  "purpose": "Sanitized proof that the repository's BM25 candidate retriever called the live saved QLoRA adapter and combined the ESCI labels with retrieval scores.",
+  "model_health": {
+    "status": "ok",
+    "model_kind": "fine_tuned_adapter",
+    "adapter_loaded": true,
+    "model_version": "qwen2.5-0.5b-esci-lora-r16-10k",
+    "base_model": "Qwen/Qwen2.5-0.5B-Instruct"
+  },
+  "request": {
+    "query": "black university laptop backpack",
+    "retrieval_strategy": "bm25",
+    "reranking_applied": true,
+    "candidate_k": 6
+  },
+  "trace": {
+    "candidate_count": 6,
+    "latency_ms": 5955.88,
+    "stage_latency_ms": {
+      "candidate_generation": 0.51,
+      "qlora_reranking": 5955.09
+    },
+    "tools_selected": [
+      "bm25_candidate_retrieval",
+      "sft_esci_reranker",
+      "grounded_result_summary"
+    ]
+  },
+  "ranked_results": [
+    {"rank": 1, "product_id": "demo-backpack-2", "label": "E", "bm25_raw": 2.2334945874969474, "sft_gain": 3.0, "combined_score": 0.9513},
+    {"rank": 2, "product_id": "demo-sleeve-1", "label": "E", "bm25_raw": 2.1970624309316875, "sft_gain": 3.0, "combined_score": 0.9488},
+    {"rank": 3, "product_id": "demo-bottle-1", "label": "E", "bm25_raw": 1.1993486444929649, "sft_gain": 3.0, "combined_score": 0.8812},
+    {"rank": 4, "product_id": "demo-backpack-3", "label": "E", "bm25_raw": 1.1741088914416742, "sft_gain": 3.0, "combined_score": 0.8795},
+    {"rank": 5, "product_id": "demo-handbag-1", "label": "E", "bm25_raw": 0.0, "sft_gain": 3.0, "combined_score": 0.8},
+    {"rank": 6, "product_id": "demo-backpack-1", "label": "S", "bm25_raw": 2.952799811627343, "sft_gain": 2.0, "combined_score": 0.7333}
+  ],
+  "limitations": [
+    "This is an integration smoke test over the six-product demo catalog, not a retrieval-quality benchmark.",
+    "Several implausible Exact labels show that the current adapter is not production-ready.",
+    "The temporary endpoint URL and API key are intentionally omitted."
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "claim": "Qwen2.5-0.5B-Instruct fine-tuned with 4-bit QLoRA on 10,000 Amazon ESCI query-product examples",
+  "training": {
+    "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "dataset": "Amazon Shopping Queries ESCI",
+    "training_examples": 10000,
+    "validation_examples": 500,
+    "held_out_examples": 500,
+    "epochs": 1,
+    "steps": 625,
+    "runtime": "Google Colab Tesla T4",
+    "wall_time": "22:25",
+    "quantization": "4-bit NF4 QLoRA",
+    "lora_rank": 16,
+    "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj"],
+    "trainable_parameters_reported": 2162688,
+    "trainable_parameters_verified_from_adapter": 2162688,
+    "adapter_tensor_count": 192,
+    "adapter_dtype": "BF16"
+  },
+  "held_out_metrics": {
+    "frozen_base": {
+      "accuracy": 0.272,
+      "macro_f1": 0.13383362930315154
+    },
+    "fine_tuned_lora": {
+      "accuracy": 0.284,
+      "macro_f1": 0.24168071140854125
+    },
+    "delta": {
+      "accuracy": 0.011999999999999955,
+      "macro_f1": 0.10784708210538971
+    }
+  },
+  "sha256": {
+    "adapter_model_safetensors": "72fca8548a21ebd0a000e73ecea6328877af5d77a53c063cbb1f591ff2146204",
+    "adapter_config_json": "9af72de730a36bd507dd5746399837bdac66c02d64e8ffbeed7a9ea4055368da",
+    "esci_comparison_json": "3a22b6fb9f6b5d9ba2ecd0d07dd44bd0deda17fb5195e3fcabb6e3790c43cb57",
+    "esci_predictions_jsonl": "f00d9bef377be28e1c0f53faf0bca732979a0ce3ba6171bb66d4c0c5c5f8be50"
+  },
+  "interpretation": "The fine-tuned adapter improved held-out macro-F1 substantially, but accuracy improved only modestly. These files substantiate the training claim, not a production-quality accuracy claim."
+}

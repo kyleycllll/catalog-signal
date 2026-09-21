@@ -33,5 +33,12 @@ def test_runner_writes_machine_and_human_readable_baseline_evidence(tmp_path):
     }
     report = asyncio.run(_runner_module().run(config, output))
     assert report["results"][0]["status"] == "completed"
-    assert "| BM25 | completed" in (output / "comparison.md").read_text()
+    metrics = report["results"][0]["metrics"]
+    assert metrics["observed_candidate_coverage"]["recall_at_5"] == 1.0
+    assert metrics["observed_candidate_coverage"]["hit_rate_at_5"] == 1.0
+    assert metrics["observed_candidate_coverage"]["mrr"] == 1.0
+    assert "judged_pool_ndcg_at_10" in metrics["retrieved_judged_pool_ranking"]
+    comparison = (output / "comparison.md").read_text()
+    assert "| BM25 | completed" in comparison
+    assert "Observed Recall@5" in comparison
     assert json.loads((output / "results.json").read_text())["dataset"]["queries"] == 1

@@ -1,0 +1,5 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:   0%|          | 1/290 [00:01<07:56,  1.65s/it]Loading weights: 100%|██████████| 290/290 [00:01<00:00, 175.18it/s]
+adapter {"device": "mps", "dtype": "float16", "base_weights": "nf4", "accuracy": 0.286, "macro_f1": 0.24187546867418339, "confusion_matrix": {"E": [85, 7, 26, 15], "S": [76, 10, 11, 14], "C": [59, 15, 37, 16], "I": [86, 8, 24, 11]}, "agreement_with_saved_colab_predictions": 0.974, "unparsed_generations": 0, "seconds": 258.03}
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:   0%|          | 1/290 [00:02<11:19,  2.35s/it]Loading weights: 100%|██████████| 290/290 [00:02<00:00, 122.75it/s]
+base {"device": "mps", "dtype": "float16", "base_weights": "nf4", "accuracy": 0.272, "macro_f1": 0.13381773661237092, "confusion_matrix": {"E": [9, 0, 0, 124], "S": [2, 0, 0, 109], "C": [9, 1, 0, 117], "I": [2, 0, 0, 127]}, "agreement_with_saved_colab_predictions": 0.998, "unparsed_generations": 477, "seconds": 277.43}

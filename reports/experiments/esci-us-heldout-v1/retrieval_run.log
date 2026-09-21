@@ -1,0 +1,60 @@
+Loaded catalog (1,215,854) in 10.0s
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 6841.50it/s]
+validation: 500/2132 queries
+validation: 1000/2132 queries
+validation: 1500/2132 queries
+validation: 2000/2132 queries
+Selected on validation by recall_at_40: hybrid
+test: 500/8956 queries
+test: 1000/8956 queries
+test: 1500/8956 queries
+test: 2000/8956 queries
+test: 2500/8956 queries
+test: 3000/8956 queries
+test: 3500/8956 queries
+test: 4000/8956 queries
+test: 4500/8956 queries
+test: 5000/8956 queries
+test: 5500/8956 queries
+test: 6000/8956 queries
+test: 6500/8956 queries
+test: 7000/8956 queries
+test: 7500/8956 queries
+test: 8000/8956 queries
+test: 8500/8956 queries
+{
+  "bm25": {
+    "recall_at_10": 0.1540949793472963,
+    "hit_rate_at_10": 0.6566547565877624,
+    "precision_at_10": 0.22003126395712372,
+    "judged_at_10": 0.2559178204555605,
+    "recall_at_40": 0.28795022034444656,
+    "hit_rate_at_40": 0.792094685127289,
+    "precision_at_40": 0.11191100937918715,
+    "judged_at_40": 0.13161009379187139,
+    "mrr": 0.4543403496252919
+  },
+  "dense": {
+    "recall_at_10": 0.12919309875763757,
+    "hit_rate_at_10": 0.6112103617686467,
+    "precision_at_10": 0.18512728896828942,
+    "judged_at_10": 0.20774899508709246,
+    "recall_at_40": 0.25486169518816476,
+    "hit_rate_at_40": 0.7644037516748549,
+    "precision_at_40": 0.09829723090665476,
+    "judged_at_40": 0.1117211924966503,
+    "mrr": 0.4059390921856609
+  },
+  "hybrid": {
+    "recall_at_10": 0.1649454441711238,
+    "hit_rate_at_10": 0.6967396158999554,
+    "precision_at_10": 0.23466949531040646,
+    "judged_at_10": 0.267641804376954,
+    "recall_at_40": 0.32240460938367554,
+    "hit_rate_at_40": 0.834189370254578,
+    "precision_at_40": 0.12375781598928093,
+    "judged_at_40": 0.1436746315319339,
+    "mrr": 0.48437000056438695
+  }
+}

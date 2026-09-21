@@ -1,0 +1,504 @@
+{
+  "run_id": "esci-us-heldout-v1",
+  "provenance": {
+    "timestamp_utc": "2026-09-21T10:26:29.187528+00:00",
+    "git_commit": "7424dbb3790e320f891592005a01a0eb9b9f12b4",
+    "git_tracked_changes_uncommitted": true,
+    "python": "3.12.14",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "library_versions": {
+      "numpy": "2.5.3",
+      "faiss": "1.15.1",
+      "torch": "2.14.0",
+      "transformers": "5.17.0",
+      "peft": "0.21.0",
+      "sentence_transformers": "6.1.0",
+      "scipy": "1.18.1"
+    }
+  },
+  "config": {
+    "run_id": "esci-us-heldout-v1",
+    "output_root": "reports/experiments",
+    "seed": 42,
+    "manifest": "data/manifests/esci_split_manifest.json",
+    "catalog": "data/processed/esci_us_products.parquet",
+    "labels": "data/esci/labels.parquet",
+    "dense_index": "data/indexes/esci_us_minilm.faiss",
+    "bm25_index": "data/indexes/esci_us_bm25",
+    "retrieval": {
+      "systems": [
+        "bm25",
+        "dense",
+        "hybrid"
+      ],
+      "candidate_ks": [
+        10,
+        40
+      ],
+      "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+      "rrf_k": 60,
+      "fusion_depth": 1000,
+      "test_max_queries": null,
+      "bootstrap_samples": 2000,
+      "selection": {
+        "split": "validation",
+        "max_queries": null,
+        "metric": "recall_at_40",
+        "rule": "Pre-registered: the system with the highest mean validation Recall@40 over known E/S positives supplies the fixed candidate sets for reranking (ties resolved by list order). RRF k=60 is the implemented default and is not tuned."
+      }
+    },
+    "reranking": {
+      "adapter": "models/esci-qwen-lora",
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "dtype": "bfloat16",
+      "batch_size": 8,
+      "candidate_k": 40,
+      "max_queries": 300,
+      "query_sample": "sha256(seed:query_id) order over all evaluated test queries; fixed before any reranking result is seen",
+      "score_formula": "retrieval.rerank_with_sft: 0.8 * gain/3 + 0.2 * min-max normalized retrieval score (no session feedback)",
+      "ndcg_ks": [
+        5,
+        10
+      ],
+      "bootstrap_samples": 2000
+    }
+  },
+  "config_sha256": "933842541b34c244184173b8f8532ae0e0768707027a2cfa52e5d351b633b05c",
+  "data": {
+    "manifest": "data/manifests/esci_split_manifest.json",
+    "manifest_sha256": "adfead74edf9881fc4dd72e4af2b24d1d0b48b3ce8dcfc29fe1a751db12f6f09",
+    "catalog": "data/processed/esci_us_products.parquet",
+    "catalog_products": 1215854,
+    "catalog_content_fingerprint": "d63ef57d3905189945d68f4ea18abbc325f59483b9660250e368dbafbeb2ea11",
+    "labels_sha256": "759021155e657b7e93f3b1a955358c9786cbacc595582b2b33346e23bc0c2e17",
+    "validation_queries": 2132,
+    "test_queries": 8956,
+    "test_query_ids_sha256": "6ad7fab9294a756dfa8199148d63519e7532cf7bd1adbcd30e2435e753ab23d5"
+  },
+  "indexes": {
+    "dense": {
+      "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+      "dimensions": 384,
+      "product_count": 1215854,
+      "catalog_fingerprint": "d63ef57d3905189945d68f4ea18abbc325f59483b9660250e368dbafbeb2ea11",
+      "backend": "faiss.IndexFlatIP",
+      "normalized": true,
+      "similarity": "inner product of L2-normalized vectors (cosine)",
+      "text_representation": "product_discovery.retrieval.product_text",
+      "encode_dtype": "float16",
+      "encode_device": "mps",
+      "max_seq_length": 256,
+      "built_at": "2026-09-21T08:35:24.749063+00:00",
+      "source_manifest": "data/manifests/esci_split_manifest.json",
+      "source_manifest_sha256": "adfead74edf9881fc4dd72e4af2b24d1d0b48b3ce8dcfc29fe1a751db12f6f09",
+      "catalog_path": "data/processed/esci_us_products.parquet",
+      "path": "data/indexes/esci_us_minilm.faiss",
+      "query_encoder_device": "mps:0",
+      "faiss_file_sha256": "43e1d913168afaad2e66b83eb900990aa92613399be9407ffe23268057564cac"
+    },
+    "bm25": {
+      "path": "data/indexes/esci_us_bm25",
+      "k1": 1.5,
+      "b": 0.75,
+      "vocabulary_terms": 803827,
+      "documents": 1215854
+    },
+    "rrf": {
+      "k": 60,
+      "fusion_depth": 1000,
+      "formula": "score(d) = sum_i 1 / (k + rank_i(d)) over full BM25 and dense rankings"
+    },
+    "smoke_test": {
+      "index_vector_count_equals_catalog": true,
+      "index_ids_equal_catalog_order": true,
+      "metadata_fingerprint_matches_catalog": true,
+      "normalized": true,
+      "dense_returns_k": true,
+      "returned_rows_in_catalog": true,
+      "sampled_vector_norms_unit": true
+    }
+  },
+  "metric_definitions": {
+    "relevant": "ESCI E or S judged for the query",
+    "recall_at_k": "known judged E/S positives in original top K / all known judged E/S positives (coverage of known positives, not catalog-wide recall)",
+    "hit_rate_at_k": "1 if any known E/S positive is in the original top K",
+    "precision_at_k": "known E/S in top K / min(K, returned); unjudged counted non-relevant (lower bound)",
+    "judged_at_k": "fraction of top K with any ESCI judgment for the query",
+    "mrr": "reciprocal original rank of the first known E/S positive within the top 40 (0 if none)",
+    "latency_ms": "wall time per query, single query at a time, including query embedding for dense/hybrid"
+  },
+  "selection": {
+    "rule": {
+      "split": "validation",
+      "max_queries": null,
+      "metric": "recall_at_40",
+      "rule": "Pre-registered: the system with the highest mean validation Recall@40 over known E/S positives supplies the fixed candidate sets for reranking (ties resolved by list order). RRF k=60 is the implemented default and is not tuned."
+    },
+    "split": "validation",
+    "validation_metrics": {
+      "bm25": {
+        "recall_at_10": 0.15109497301019006,
+        "hit_rate_at_10": 0.6552532833020638,
+        "precision_at_10": 0.22181050656660412,
+        "judged_at_10": 0.2601313320825516,
+        "recall_at_40": 0.2842043085497551,
+        "hit_rate_at_40": 0.775797373358349,
+        "precision_at_40": 0.11268761726078799,
+        "judged_at_40": 0.1333724202626642,
+        "mrr": 0.45977224584699716
+      },
+      "dense": {
+        "recall_at_10": 0.12704738833448678,
+        "hit_rate_at_10": 0.6224202626641651,
+        "precision_at_10": 0.1861163227016886,
+        "judged_at_10": 0.20712945590994372,
+        "recall_at_40": 0.2535718608889515,
+        "hit_rate_at_40": 0.7668855534709194,
+        "precision_at_40": 0.09889774859287055,
+        "judged_at_40": 0.11227720450281425,
+        "mrr": 0.407717778078119
+      },
+      "hybrid": {
+        "recall_at_10": 0.16160957658211744,
+        "hit_rate_at_10": 0.7054409005628518,
+        "precision_at_10": 0.23780487804878048,
+        "judged_at_10": 0.2717166979362101,
+        "recall_at_40": 0.31995814978339265,
+        "hit_rate_at_40": 0.824108818011257,
+        "precision_at_40": 0.125281425891182,
+        "judged_at_40": 0.14583724202626638,
+        "mrr": 0.48755138185525493
+      }
+    },
+    "selected_system": "hybrid"
+  },
+  "validation": {
+    "bm25": {
+      "queries": 2132,
+      "metrics": {
+        "recall_at_10": 0.15109497301019006,
+        "hit_rate_at_10": 0.6552532833020638,
+        "precision_at_10": 0.22181050656660412,
+        "judged_at_10": 0.2601313320825516,
+        "recall_at_40": 0.2842043085497551,
+        "hit_rate_at_40": 0.775797373358349,
+        "precision_at_40": 0.11268761726078799,
+        "judged_at_40": 0.1333724202626642,
+        "mrr": 0.45977224584699716
+      },
+      "latency_ms": {
+        "count": 2132,
+        "mean_ms": 20.192,
+        "p50_ms": 14.096,
+        "p95_ms": 49.527,
+        "max_ms": 537.911
+      },
+      "stage_latency_ms": null
+    },
+    "dense": {
+      "queries": 2132,
+      "metrics": {
+        "recall_at_10": 0.12704738833448678,
+        "hit_rate_at_10": 0.6224202626641651,
+        "precision_at_10": 0.1861163227016886,
+        "judged_at_10": 0.20712945590994372,
+        "recall_at_40": 0.2535718608889515,
+        "hit_rate_at_40": 0.7668855534709194,
+        "precision_at_40": 0.09889774859287055,
+        "judged_at_40": 0.11227720450281425,
+        "mrr": 0.407717778078119
+      },
+      "latency_ms": {
+        "count": 2132,
+        "mean_ms": 51.796,
+        "p50_ms": 33.313,
+        "p95_ms": 83.309,
+        "max_ms": 1967.169
+      },
+      "stage_latency_ms": null
+    },
+    "hybrid": {
+      "queries": 2132,
+      "metrics": {
+        "recall_at_10": 0.16160957658211744,
+        "hit_rate_at_10": 0.7054409005628518,
+        "precision_at_10": 0.23780487804878048,
+        "judged_at_10": 0.2717166979362101,
+        "recall_at_40": 0.31995814978339265,
+        "hit_rate_at_40": 0.824108818011257,
+        "precision_at_40": 0.125281425891182,
+        "judged_at_40": 0.14583724202626638,
+        "mrr": 0.48755138185525493
+      },
+      "latency_ms": {
+        "count": 2132,
+        "mean_ms": 408.728,
+        "p50_ms": 352.833,
+        "p95_ms": 801.207,
+        "max_ms": 3336.574
+      },
+      "stage_latency_ms": {
+        "bm25_top_depth": {
+          "count": 2132,
+          "mean_ms": 17.003,
+          "p50_ms": 12.448,
+          "p95_ms": 37.811,
+          "max_ms": 407.698
+        },
+        "query_embedding": {
+          "count": 2132,
+          "mean_ms": 13.543,
+          "p50_ms": 10.627,
+          "p95_ms": 22.434,
+          "max_ms": 393.034
+        },
+        "faiss_top_depth": {
+          "count": 2132,
+          "mean_ms": 33.095,
+          "p50_ms": 22.82,
+          "p95_ms": 65.914,
+          "max_ms": 1396.533
+        },
+        "exact_rank_lookup_and_fusion": {
+          "count": 2132,
+          "mean_ms": 344.954,
+          "p50_ms": 298.505,
+          "p95_ms": 691.848,
+          "max_ms": 3250.013
+        }
+      }
+    }
+  },
+  "test": {
+    "bm25": {
+      "queries": 8956,
+      "metrics": {
+        "recall_at_10": 0.1540949793472963,
+        "hit_rate_at_10": 0.6566547565877624,
+        "precision_at_10": 0.22003126395712372,
+        "judged_at_10": 0.2559178204555605,
+        "recall_at_40": 0.28795022034444656,
+        "hit_rate_at_40": 0.792094685127289,
+        "precision_at_40": 0.11191100937918715,
+        "judged_at_40": 0.13161009379187139,
+        "mrr": 0.4543403496252919
+      },
+      "latency_ms": {
+        "count": 8956,
+        "mean_ms": 21.336,
+        "p50_ms": 14.925,
+        "p95_ms": 51.377,
+        "max_ms": 1168.207
+      },
+      "stage_latency_ms": null
+    },
+    "dense": {
+      "queries": 8956,
+      "metrics": {
+        "recall_at_10": 0.12919309875763757,
+        "hit_rate_at_10": 0.6112103617686467,
+        "precision_at_10": 0.18512728896828942,
+        "judged_at_10": 0.20774899508709246,
+        "recall_at_40": 0.25486169518816476,
+        "hit_rate_at_40": 0.7644037516748549,
+        "precision_at_40": 0.09829723090665476,
+        "judged_at_40": 0.1117211924966503,
+        "mrr": 0.4059390921856609
+      },
+      "latency_ms": {
+        "count": 8956,
+        "mean_ms": 52.812,
+        "p50_ms": 38.331,
+        "p95_ms": 97.419,
+        "max_ms": 4808.195
+      },
+      "stage_latency_ms": null
+    },
+    "hybrid": {
+      "queries": 8956,
+      "metrics": {
+        "recall_at_10": 0.1649454441711238,
+        "hit_rate_at_10": 0.6967396158999554,
+        "precision_at_10": 0.23466949531040646,
+        "judged_at_10": 0.267641804376954,
+        "recall_at_40": 0.32240460938367554,
+        "hit_rate_at_40": 0.834189370254578,
+        "precision_at_40": 0.12375781598928093,
+        "judged_at_40": 0.1436746315319339,
+        "mrr": 0.48437000056438695
+      },
+      "latency_ms": {
+        "count": 8956,
+        "mean_ms": 471.31,
+        "p50_ms": 430.304,
+        "p95_ms": 833.488,
+        "max_ms": 5549.293
+      },
+      "stage_latency_ms": {
+        "bm25_top_depth": {
+          "count": 8956,
+          "mean_ms": 19.297,
+          "p50_ms": 14.304,
+          "p95_ms": 42.624,
+          "max_ms": 367.806
+        },
+        "query_embedding": {
+          "count": 8956,
+          "mean_ms": 16.224,
+          "p50_ms": 14.174,
+          "p95_ms": 26.574,
+          "max_ms": 1153.658
+        },
+        "faiss_top_depth": {
+          "count": 8956,
+          "mean_ms": 39.975,
+          "p50_ms": 26.332,
+          "p95_ms": 85.729,
+          "max_ms": 2579.247
+        },
+        "exact_rank_lookup_and_fusion": {
+          "count": 8956,
+          "mean_ms": 395.646,
+          "p50_ms": 361.573,
+          "p95_ms": 721.016,
+          "max_ms": 5401.586
+        }
+      }
+    }
+  },
+  "test_paired_comparisons": {
+    "hybrid_minus_bm25": {
+      "recall_at_10": {
+        "mean_difference": 0.010850464823827483,
+        "ci95_low": 0.008802120896830919,
+        "ci95_high": 0.012992755476501283,
+        "queries_better": 2629,
+        "queries_worse": 1851,
+        "queries_tied": 4476
+      },
+      "recall_at_40": {
+        "mean_difference": 0.034454389039228955,
+        "ci95_low": 0.03173839392623266,
+        "ci95_high": 0.036883472557347155,
+        "queries_better": 3330,
+        "queries_worse": 1634,
+        "queries_tied": 3992
+      },
+      "hit_rate_at_10": {
+        "mean_difference": 0.040084859312192946,
+        "ci95_low": 0.032377735596248326,
+        "ci95_high": 0.04801250558284949,
+        "queries_better": 825,
+        "queries_worse": 466,
+        "queries_tied": 7665
+      },
+      "hit_rate_at_40": {
+        "mean_difference": 0.04209468512728897,
+        "ci95_low": 0.03573023671281822,
+        "ci95_high": 0.048124162572577046,
+        "queries_better": 576,
+        "queries_worse": 199,
+        "queries_tied": 8181
+      },
+      "reciprocal_rank": {
+        "mean_difference": 0.03002965093909501,
+        "ci95_low": 0.023813852560889647,
+        "ci95_high": 0.03659197207884381,
+        "queries_better": 2852,
+        "queries_worse": 1978,
+        "queries_tied": 4126
+      }
+    },
+    "dense_minus_bm25": {
+      "recall_at_10": {
+        "mean_difference": -0.024901880589658736,
+        "ci95_low": -0.02770547676112811,
+        "ci95_high": -0.02184570153898288,
+        "queries_better": 2175,
+        "queries_worse": 3349,
+        "queries_tied": 3432
+      },
+      "recall_at_40": {
+        "mean_difference": -0.03308852515628185,
+        "ci95_low": -0.03724356431547597,
+        "ci95_high": -0.028853520179205804,
+        "queries_better": 2573,
+        "queries_worse": 3871,
+        "queries_tied": 2512
+      },
+      "hit_rate_at_10": {
+        "mean_difference": -0.04544439481911568,
+        "ci95_low": -0.05594294327824922,
+        "ci95_high": -0.03539526574363555,
+        "queries_better": 926,
+        "queries_worse": 1333,
+        "queries_tied": 6697
+      },
+      "hit_rate_at_40": {
+        "mean_difference": -0.027690933452434122,
+        "ci95_low": -0.03662349263063868,
+        "ci95_high": -0.018870031263957122,
+        "queries_better": 689,
+        "queries_worse": 937,
+        "queries_tied": 7330
+      },
+      "reciprocal_rank": {
+        "mean_difference": -0.04840125743963105,
+        "ci95_low": -0.056960621966350385,
+        "ci95_high": -0.03951619185655588,
+        "queries_better": 2506,
+        "queries_worse": 3226,
+        "queries_tied": 3224
+      }
+    },
+    "hybrid_minus_dense": {
+      "recall_at_10": {
+        "mean_difference": 0.035752345413486215,
+        "ci95_low": 0.03353952982952234,
+        "ci95_high": 0.03801789620202263,
+        "queries_better": 3512,
+        "queries_worse": 1217,
+        "queries_tied": 4227
+      },
+      "recall_at_40": {
+        "mean_difference": 0.0675429141955108,
+        "ci95_low": 0.0646069913890323,
+        "ci95_high": 0.07041758234085387,
+        "queries_better": 4465,
+        "queries_worse": 1194,
+        "queries_tied": 3297
+      },
+      "hit_rate_at_10": {
+        "mean_difference": 0.08552925413130862,
+        "ci95_low": 0.07726384546672622,
+        "ci95_high": 0.09368021438142028,
+        "queries_better": 1151,
+        "queries_worse": 385,
+        "queries_tied": 7420
+      },
+      "hit_rate_at_40": {
+        "mean_difference": 0.0697856185797231,
+        "ci95_low": 0.06319785618579724,
+        "ci95_high": 0.07682000893255918,
+        "queries_better": 794,
+        "queries_worse": 169,
+        "queries_tied": 7993
+      },
+      "reciprocal_rank": {
+        "mean_difference": 0.07843090837872606,
+        "ci95_low": 0.07153083727412562,
+        "ci95_high": 0.08515843159501703,
+        "queries_better": 3441,
+        "queries_worse": 1687,
+        "queries_tied": 3828
+      }
+    }
+  },
+  "fixed_candidates": {
+    "path": "reports/experiments/esci-us-heldout-v1/fixed_candidates_test.jsonl",
+    "system": "hybrid",
+    "k": 40,
+    "sha256": "44201cf3c9defb9eb378dee1390f61c463a4f7841ef9a13b5587fa3778506ecd"
+  }
+}

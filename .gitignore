@@ -14,3 +14,14 @@ models/
 frontend/node_modules/
 frontend/dist/
 *.md
+data/esci/
+
+# Reports: Markdown stays ignored by default (*.md above); track evaluation reports explicitly.
+!reports/retrieval_reranking_evaluation_complete.md
+!reports/reranker_ablation_completion.md
+!reports/audit/*.md
+!reports/experiments/**/*.md
+# Large regenerable run artifacts: hashes, schema and regeneration command live in
+# <run>/large_artifacts.json; compact summaries are tracked instead.
+reports/experiments/*/retrieval_per_query.jsonl
+reports/experiments/*/work/

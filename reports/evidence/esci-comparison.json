@@ -1,0 +1,23 @@
+{
+  "protocol": {
+    "dataset": "Amazon Shopping Queries ESCI",
+    "training_examples": 10000,
+    "validation_examples": 500,
+    "held_out_examples": 500,
+    "epochs": 1,
+    "max_sequence_length": 256,
+    "seed": 42
+  },
+  "frozen_base": {
+    "accuracy": 0.272,
+    "macro_f1": 0.13383362930315154
+  },
+  "fine_tuned_lora": {
+    "accuracy": 0.284,
+    "macro_f1": 0.24168071140854125
+  },
+  "delta": {
+    "accuracy": 0.011999999999999955,
+    "macro_f1": 0.10784708210538971
+  }
+}

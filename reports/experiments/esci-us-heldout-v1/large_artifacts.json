@@ -1,0 +1,38 @@
+{
+  "provenance": {
+    "timestamp_utc": "2026-09-21T12:02:19.121390+00:00",
+    "git_commit": "7424dbb3790e320f891592005a01a0eb9b9f12b4",
+    "git_tracked_changes_uncommitted": true,
+    "python": "3.12.14",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "library_versions": {}
+  },
+  "untracked_large_artifacts": {
+    "retrieval_per_query.jsonl": {
+      "expected_path": "reports/experiments/esci-us-heldout-v1/retrieval_per_query.jsonl",
+      "sha256": "14d176205b5f86749dad6f2a90aedf978a2cafdca596bb3843874a562d5b395f",
+      "bytes": 60934565,
+      "rows": 33264,
+      "generated_by": "python scripts/run_esci_retrieval_benchmark.py --config configs/esci_heldout.json",
+      "schema": {
+        "split": "validation | test",
+        "system": "bm25 | dense | hybrid",
+        "query_id": "ESCI query_id (str)",
+        "query": "query text",
+        "known_labels": "number of judged products for the query",
+        "known_e_or_s": "number of judged E/S products for the query",
+        "ranked_product_ids": "top-40 product IDs in rank order",
+        "retrieved_known_labels": "ESCI label or null (unjudged) per ranked position",
+        "scores": "retrieval score per ranked position",
+        "metrics": "reciprocal_rank, recall/hit_rate/precision/judged at 10 and 40",
+        "latency_ms": "measured end-to-end retrieval wall time"
+      },
+      "why_not_in_git": "61 MB; regenerable from pinned data, indexes and code. The per-query metrics are tracked in retrieval_per_query_metrics.csv and the hybrid test top-40 IDs in fixed_candidates_test.jsonl.",
+      "tracked_summary": {
+        "path": "reports/experiments/esci-us-heldout-v1/retrieval_per_query_metrics.csv",
+        "sha256": "74500426259065a5f7beca08e1cf9d5ead341c31b31ee7fc2b5e52c9f9aef68f"
+      }
+    }
+  }
+}

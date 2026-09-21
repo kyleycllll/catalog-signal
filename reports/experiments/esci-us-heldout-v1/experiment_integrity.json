@@ -1,0 +1,41 @@
+{
+  "provenance": {
+    "timestamp_utc": "2026-09-21T12:01:53.303073+00:00",
+    "git_commit": "7424dbb3790e320f891592005a01a0eb9b9f12b4",
+    "git_tracked_changes_uncommitted": true,
+    "python": "3.12.14",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "library_versions": {
+      "numpy": "2.5.3"
+    }
+  },
+  "checks": {
+    "prepared_test_equals_official_test": true,
+    "train_validation_test_query_disjoint": true,
+    "system_selected_on_validation": true,
+    "rrf_k_is_untuned_default_60": true,
+    "fixed_candidates_equal_selected_system_test_rankings": true,
+    "fixed_candidate_queries_official_test_only": true,
+    "reranking_queries_official_test_only": true,
+    "reranking_used_exact_fixed_candidate_ids": true,
+    "reranking_is_permutation_of_candidates": true,
+    "dense_index_fingerprint_matches_catalog_and_manifest": true,
+    "dense_index_smoke_tests_pass": true,
+    "source_files_match_git_lfs_pointers": true,
+    "results_carry_provenance": true,
+    "saved_classifier_eval_rows_official_test_only": true
+  },
+  "all_passed": true,
+  "not_verifiable_from_artifacts": [
+    "The exact training rows of the historical adapter run were not saved. The notebook builds training and validation data only from official non-test query IDs, and the saved held-out predictions are all official-test rows, but the historical run's training set cannot be re-derived byte-for-byte."
+  ],
+  "not_used_on_test_queries": [
+    "training",
+    "prompt tuning",
+    "hard-negative mining",
+    "RRF tuning",
+    "checkpoint selection",
+    "retrieval system selection"
+  ]
+}
