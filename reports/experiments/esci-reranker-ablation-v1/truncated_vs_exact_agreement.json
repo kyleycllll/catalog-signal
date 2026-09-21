@@ -1,0 +1,309 @@
+{
+  "queries": 50,
+  "mean_overlap_at_k": 0.9758,
+  "mean_overlap_at_40": 0.978,
+  "identical_order_at_k_fraction": 0.04,
+  "judged_items_same_rank_fraction": 0.3,
+  "per_query": [
+    {
+      "overlap_at_k": 0.94,
+      "overlap_at_40": 0.95,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.99,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.95,
+      "overlap_at_40": 0.975,
+      "identical_order_at_k": false,
+      "judged_rank_equal": true
+    },
+    {
+      "overlap_at_k": 0.97,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": true
+    },
+    {
+      "overlap_at_k": 1.0,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": true,
+      "judged_rank_equal": true
+    },
+    {
+      "overlap_at_k": 0.97,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.96,
+      "overlap_at_40": 0.95,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.97,
+      "overlap_at_40": 0.95,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.95,
+      "overlap_at_40": 0.975,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.99,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": true
+    },
+    {
+      "overlap_at_k": 1.0,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": true,
+      "judged_rank_equal": true
+    },
+    {
+      "overlap_at_k": 0.99,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.99,
+      "overlap_at_40": 0.975,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.95,
+      "overlap_at_40": 0.975,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.98,
+      "overlap_at_40": 0.95,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.96,
+      "overlap_at_40": 0.95,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.94,
+      "overlap_at_40": 0.95,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.96,
+      "overlap_at_40": 0.95,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 1.0,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": true
+    },
+    {
+      "overlap_at_k": 0.98,
+      "overlap_at_40": 0.975,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.99,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.95,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 1.0,
+      "overlap_at_40": 0.975,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.95,
+      "overlap_at_40": 0.925,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.99,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": true
+    },
+    {
+      "overlap_at_k": 0.97,
+      "overlap_at_40": 0.925,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.96,
+      "overlap_at_40": 0.975,
+      "identical_order_at_k": false,
+      "judged_rank_equal": true
+    },
+    {
+      "overlap_at_k": 1.0,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": true
+    },
+    {
+      "overlap_at_k": 1.0,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 1.0,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.96,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.97,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.99,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": true
+    },
+    {
+      "overlap_at_k": 0.98,
+      "overlap_at_40": 0.975,
+      "identical_order_at_k": false,
+      "judged_rank_equal": true
+    },
+    {
+      "overlap_at_k": 0.97,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.99,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": true
+    },
+    {
+      "overlap_at_k": 1.0,
+      "overlap_at_40": 0.975,
+      "identical_order_at_k": false,
+      "judged_rank_equal": true
+    },
+    {
+      "overlap_at_k": 0.99,
+      "overlap_at_40": 0.975,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.97,
+      "overlap_at_40": 0.975,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.98,
+      "overlap_at_40": 0.975,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.97,
+      "overlap_at_40": 0.925,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.98,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.96,
+      "overlap_at_40": 0.925,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 1.0,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.97,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": true
+    },
+    {
+      "overlap_at_k": 0.97,
+      "overlap_at_40": 0.95,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.97,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.98,
+      "overlap_at_40": 0.95,
+      "identical_order_at_k": false,
+      "judged_rank_equal": true
+    },
+    {
+      "overlap_at_k": 0.99,
+      "overlap_at_40": 1.0,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    },
+    {
+      "overlap_at_k": 0.95,
+      "overlap_at_40": 0.95,
+      "identical_order_at_k": false,
+      "judged_rank_equal": false
+    }
+  ]
+}

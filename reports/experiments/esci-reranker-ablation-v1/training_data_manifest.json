@@ -1,0 +1,117 @@
+{
+  "provenance": {
+    "timestamp_utc": "2026-09-21T13:02:04.984187+00:00",
+    "git_commit": "11ada8ed6a2770aa90882b88cf3aaeb4411efbfe",
+    "git_tracked_changes_uncommitted": false,
+    "python": "3.12.14",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "library_versions": {
+      "numpy": "2.5.3"
+    }
+  },
+  "config": "configs/esci_reranker_ablation.json",
+  "config_sha256": "18ee8e03d232da52c6062e76f9f835285954fa56aceebdf38afb3b13963f10ee",
+  "labels_sha256": "759021155e657b7e93f3b1a955358c9786cbacc595582b2b33346e23bc0c2e17",
+  "catalog_sha256_manifest": "16c23420341da6948b39d9c210da0e7cfbb1912038a6e833b34992f86bb2b99e",
+  "seed": 42,
+  "source_split": "train (prepared, non-official-test query IDs)",
+  "train_queries": 18756,
+  "train_pairs_available": 377006,
+  "train_label_counts_available": {
+    "I": 64373,
+    "E": 163364,
+    "S": 132257,
+    "C": 17012
+  },
+  "mining": {
+    "file": "reports/experiments/esci-reranker-ablation-v1/hard_negative_mining.jsonl",
+    "sha256": "bd643795ee0c4cfb49a7651f34f4a3adf2098a72a0ae514155230f6f5770af2c",
+    "system": "hybrid",
+    "mining_k": 100,
+    "queries_mined": 18756,
+    "judged_hard_negative_supply": {
+      "I": 14017,
+      "C": 7560
+    },
+    "max_per_query_per_label": 2,
+    "filtering_rules": "A hard negative is a product with an observed ESCI I or C judgement for that TRAIN query that the hybrid retriever ranks within the top mining_k. Labels are never changed; unjudged retrieved products are never used as negatives. Hardest (lowest hybrid rank) first, at most max_per_query_per_label per query per label.",
+    "selected": {
+      "I": {
+        "hard_rows": 2500,
+        "median_hybrid_rank": 3,
+        "max_hybrid_rank": 8,
+        "distinct_queries": 1907
+      },
+      "C": {
+        "hard_rows": 2500,
+        "median_hybrid_rank": 5,
+        "max_hybrid_rank": 17,
+        "distinct_queries": 1730
+      }
+    },
+    "random_fill_rows_when_supply_short": {
+      "I": 0,
+      "C": 0
+    }
+  },
+  "variants": {
+    "A_balanced_random": {
+      "path": "data/esci/ablation/A_balanced_random.jsonl",
+      "sha256": "515cef18c0eed79ed3be85c64a6810b4da74cdd1554eec0c156a1768dfa32bce",
+      "rows": 10000,
+      "label_counts": {
+        "E": 2500,
+        "C": 2500,
+        "S": 2500,
+        "I": 2500
+      },
+      "distinct_queries": 7193,
+      "identity_csv": "reports/experiments/esci-reranker-ablation-v1/training_rows_A_balanced_random.csv",
+      "identity_csv_sha256": "caeaac6f806cf571c4d9ae0fb0e3f1a7f374a0af501ffbcc4b8cd16e47da2e78"
+    },
+    "B_hard_negative": {
+      "path": "data/esci/ablation/B_hard_negative.jsonl",
+      "sha256": "d8f6dc3c04cb0e7c9822d389cdb257963f5c03858c60c422eb2b5fe4758baf72",
+      "rows": 10000,
+      "label_counts": {
+        "C": 2500,
+        "E": 2500,
+        "I": 2500,
+        "S": 2500
+      },
+      "distinct_queries": 7067,
+      "identity_csv": "reports/experiments/esci-reranker-ablation-v1/training_rows_B_hard_negative.csv",
+      "identity_csv_sha256": "7be83d61cc843bf6a57eb09d0abcc109f3eb4219028c59ff0ef46da0c319cffd"
+    }
+  },
+  "controls": {
+    "B_E_and_S_rows_identical_to_A": true,
+    "rows_shared_between_A_and_B": 5453,
+    "rows_in_B_not_in_A (hard negatives added in place of random negatives)": 4547,
+    "rows_in_A_not_in_B (random negatives removed)": 4547
+  },
+  "validation_pairs": {
+    "path": "data/esci/ablation/validation_pairs.jsonl",
+    "sha256": "a85bec886108f15c46c4e9a6356ce3e31a5ac3ab8e03e69563cfdc27855dbd60",
+    "rows": 2279,
+    "queries": 300,
+    "label_counts": {
+      "S": 535,
+      "E": 863,
+      "UNJUDGED": 600,
+      "C": 142,
+      "I": 139
+    },
+    "rule": "all judged products in the validation hybrid top-40 plus the first 2 unjudged per query (label UNJUDGED; excluded from classification metrics)",
+    "source": "reports/experiments/esci-us-heldout-v1/retrieval_per_query.jsonl"
+  },
+  "leakage_checks": {
+    "train_validation_test_query_ids_disjoint": true,
+    "training_rows_train_queries_only": true,
+    "mined_queries_train_only": true,
+    "validation_rows_validation_queries_only": true,
+    "official_test_labels_read": "only to assert query-ID disjointness; no test pair is used",
+    "hard_negative_labels_unchanged": true
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "run_id": "esci-reranker-ablation-v1",
+  "output_root": "reports/experiments",
+  "base_config": "configs/esci_heldout.json",
+  "baseline_run": "esci-us-heldout-v1",
+  "seed": 42,
+  "mining": {
+    "source_split": "train",
+    "system": "hybrid",
+    "retriever": "hybrid RRF k=60 over the same BM25 top-1000 and dense top-1000 lists as the fixed-candidate system, with truncated fusion (a product missing from one list gets rank 1001 instead of its exact full-catalog rank). Changed from exact fusion after the exact version ran at ~1.4 queries/s under memory pressure (before any training data existed); agreement with exact hybrid is measured and recorded.",
+    "mining_k": 100,
+    "max_queries": null,
+    "query_sample": "all prepared-train queries (18,756); max_queries null. Raised from a planned 8,000 after a 20-query smoke run showed judged C items are sparse in the top 100 (before any training data or result existed)",
+    "hard_negative_labels": ["I", "C"],
+    "max_per_query_per_label": 2,
+    "policy": "A hard negative is a product with an observed ESCI I or C judgement for that TRAIN query that the hybrid retriever ranks within the top mining_k. Labels are never changed; unjudged retrieved products are never used as negatives. Hardest (lowest hybrid rank) first, at most max_per_query_per_label per query per label."
+  },
+  "training_data": {
+    "rows_per_label": 2500,
+    "variants": {
+      "A_balanced_random": "Historical data approach: 2,500 random TRAIN pairs per ESCI label (class-balanced, 10,000 rows).",
+      "B_hard_negative": "Same 2,500 E and 2,500 S rows as A (identical rows); the 2,500 I and 2,500 C rows are replaced by retrieval-mined hard negatives. Same size and label counts as A, so only negative hardness changes."
+    },
+    "validation_pairs": {
+      "source": "judged candidates in the hybrid top-40 of VALIDATION queries (from retrieval_per_query.jsonl of the baseline run)",
+      "max_queries": 300,
+      "query_sample": "stable_sample(seed) over validation queries"
+    }
+  },
+  "qwen": {
+    "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "quantization": "4-bit NF4 double-quantized base, emulated (quantize->dequantize round trip of every base Linear except lm_head; bitsandbytes has no Apple-silicon backend). Base frozen in fp16; LoRA weights fp32.",
+    "prompt": "local_reranker.classification_prompt (byte-identical to the notebook serving prompt)",
+    "target": "{\"label\":\"X\"} appended after the prompt, as in the notebook",
+    "loss": "completion-only (prompt tokens masked). The historical run used full-text loss.",
+    "max_length": 1024,
+    "truncation": "never truncates the label: prompts longer than max_length have the description, then bullet points, shortened until prompt+target fit",
+    "lora": {"r": 16, "alpha": 32, "dropout": 0.05, "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj"], "bias": "none"},
+    "optimizer": "AdamW (torch), weight_decay 0.0",
+    "learning_rate": 0.0002,
+    "scheduler": "cosine",
+    "warmup_ratio": 0.05,
+    "per_device_batch_size": 4,
+    "gradient_accumulation": 4,
+    "epochs": 1,
+    "max_grad_norm": 1.0,
+    "length_grouping": "shuffled mega-batches of 64 rows sorted by length (padding efficiency)",
+    "checkpoint_fractions": [0.5, 1.0],
+    "selection": "checkpoint with the higher VALIDATION macro-F1 on validation_pairs (ties -> later checkpoint)",
+    "generation": {"decoding": "greedy", "max_new_tokens": 16, "max_length": 1536, "batch_size": 8, "parse": "\"label\":\"X\" regex, fallback I", "dtype": "float16"}
+  },
+  "cross_encoder": {
+    "model": "cross-encoder/ms-marco-MiniLM-L6-v2",
+    "why": "One compact discriminative baseline: a 22M-parameter BERT cross-encoder already trained for query-passage relevance (MS MARCO), fine-tuned with a new 4-way ESCI head.",
+    "input": "query [SEP] product_text(title, brand, colour, bullet points, description) truncated to max_length",
+    "max_length": 256,
+    "head": "4-way softmax over E/S/C/I (new, randomly initialised)",
+    "loss": "cross-entropy",
+    "training_data": "the TRAIN variant selected for Qwen on validation (same rows)",
+    "learning_rate": 2e-05,
+    "batch_size": 32,
+    "epochs": 3,
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01,
+    "selection": "epoch with the highest VALIDATION macro-F1 on validation_pairs",
+    "ranking_score": "expected gain sum_c p(c)*gain(c)/3 in place of gain/3 inside the production formula 0.8*g + 0.2*normalized RRF (pre-registered primary); the argmax-label variant is also reported"
+  },
+  "test": {
+    "fixed_candidates": "reports/experiments/esci-us-heldout-v1/fixed_candidates_test.jsonl",
+    "fixed_candidates_sha256": "44201cf3c9defb9eb378dee1390f61c463a4f7841ef9a13b5587fa3778506ecd",
+    "max_queries": 200,
+    "query_sample": "identical to esci-us-heldout-v1 (stable_sample(42) over evaluated test queries); asserted equal to the historical reranking query IDs",
+    "candidate_k": 40,
+    "ndcg_ks": [5, 10],
+    "bootstrap_samples": 2000,
+    "score_formula": "retrieval.rerank_with_sft: 0.8 * gain/3 + 0.2 * min-max normalized RRF score",
+    "pre_registered": "Both locally trained Qwen arms (A and B) and the cross-encoder are evaluated on test exactly once, after all training and selection decisions are frozen. The historical adapter's test results are reused unchanged from esci-us-heldout-v1."
+  }
+}

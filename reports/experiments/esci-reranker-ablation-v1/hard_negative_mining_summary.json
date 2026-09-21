@@ -1,0 +1,63 @@
+{
+  "provenance": {
+    "timestamp_utc": "2026-09-21T13:01:53.037594+00:00",
+    "git_commit": "11ada8ed6a2770aa90882b88cf3aaeb4411efbfe",
+    "git_tracked_changes_uncommitted": false,
+    "python": "3.12.14",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "library_versions": {
+      "numpy": "2.5.3"
+    }
+  },
+  "config": "configs/esci_reranker_ablation.json",
+  "config_sha256": "18ee8e03d232da52c6062e76f9f835285954fa56aceebdf38afb3b13963f10ee",
+  "source_split": "train",
+  "train_queries_available": 18756,
+  "queries_mined": 18756,
+  "leakage_check": "mined query IDs are prepared-train only and disjoint from all validation and test query IDs (asserted)",
+  "system": "hybrid",
+  "fusion": "truncated RRF k=60 over BM25 top-1000 and dense top-1000 (missing component rank = 1001); see truncated_vs_exact_agreement",
+  "truncated_vs_exact_agreement": {
+    "queries": 50,
+    "mean_overlap_at_k": 0.9758,
+    "mean_overlap_at_40": 0.978,
+    "identical_order_at_k_fraction": 0.04,
+    "judged_items_same_rank_fraction": 0.3
+  },
+  "mining_k": 100,
+  "judged_labels_in_top_k": {
+    "E": 79069,
+    "S": 47943,
+    "C": 7560,
+    "I": 14017
+  },
+  "unjudged_in_top_k": 1727011,
+  "shards": [
+    {
+      "queries": 18756,
+      "seconds": 1794.7,
+      "encoder_device": "mps:0",
+      "provenance": {
+        "timestamp_utc": "2026-09-21T13:01:45.318349+00:00",
+        "git_commit": "11ada8ed6a2770aa90882b88cf3aaeb4411efbfe",
+        "git_tracked_changes_uncommitted": false,
+        "python": "3.12.14",
+        "platform": "macOS-26.6.2-arm64-arm-64bit",
+        "machine": "arm64",
+        "library_versions": {
+          "numpy": "2.5.3",
+          "faiss": "1.15.1",
+          "torch": "2.14.0",
+          "transformers": "5.17.0",
+          "peft": "0.21.0",
+          "sentence_transformers": "6.1.0",
+          "scipy": "1.18.1"
+        }
+      }
+    }
+  ],
+  "wall_seconds_max_shard": 1794.7,
+  "output": "reports/experiments/esci-reranker-ablation-v1/hard_negative_mining.jsonl",
+  "output_sha256": "bd643795ee0c4cfb49a7651f34f4a3adf2098a72a0ae514155230f6f5770af2c"
+}

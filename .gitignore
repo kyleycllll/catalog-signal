@@ -25,3 +25,4 @@ data/esci/
 # <run>/large_artifacts.json; compact summaries are tracked instead.
 reports/experiments/*/retrieval_per_query.jsonl
 reports/experiments/*/work/
+reports/experiments/esci-reranker-ablation-v1/hard_negative_mining.jsonl
