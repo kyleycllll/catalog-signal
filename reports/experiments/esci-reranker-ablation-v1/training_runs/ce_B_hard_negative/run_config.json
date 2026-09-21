@@ -1,0 +1,40 @@
+{
+  "variant": "B_hard_negative",
+  "config": "configs/esci_reranker_ablation.json",
+  "config_sha256": "8842d7cad0a68833b1230166e9421ac1dcf4143ad07892c106909d20e8f2c1c1",
+  "cross_encoder": {
+    "model": "cross-encoder/ms-marco-MiniLM-L6-v2",
+    "why": "One compact discriminative baseline: a 22M-parameter BERT cross-encoder already trained for query-passage relevance (MS MARCO), fine-tuned with a new 4-way ESCI head.",
+    "input": "query [SEP] product_text(title, brand, colour, bullet points, description) truncated to max_length",
+    "max_length": 256,
+    "head": "4-way softmax over E/S/C/I (new, randomly initialised)",
+    "loss": "cross-entropy",
+    "training_data": "both TRAIN variants (A_balanced_random, B_hard_negative), trained separately with identical settings; changed from 'the variant selected for Qwen' before any cross-encoder or Qwen validation result existed, so the baseline does not wait on ~7 h of Qwen training",
+    "learning_rate": 2e-05,
+    "batch_size": 32,
+    "epochs": 3,
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01,
+    "selection": "(variant, epoch) with the highest VALIDATION macro-F1 on validation_pairs; frozen before any test evaluation",
+    "ranking_score": "expected gain sum_c p(c)*gain(c)/3 in place of gain/3 inside the production formula 0.8*g + 0.2*normalized RRF (pre-registered primary); the argmax-label variant is also reported"
+  },
+  "seed": 42,
+  "device": "mps",
+  "parameters": 22714756,
+  "steps_per_epoch": 313,
+  "provenance": {
+    "timestamp_utc": "2026-09-21T18:29:43.619684+00:00",
+    "git_commit": "3d49f033c6962a21f6a02eb1d7a9769ab4580d4a",
+    "git_tracked_changes_uncommitted": true,
+    "python": "3.12.14",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "library_versions": {
+      "numpy": "2.5.3",
+      "torch": "2.14.0",
+      "transformers": "5.17.0",
+      "peft": "0.21.0",
+      "scipy": "1.18.1"
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "variant": "A_balanced_random",
+  "config": "configs/esci_reranker_ablation.json",
+  "config_sha256": "8842d7cad0a68833b1230166e9421ac1dcf4143ad07892c106909d20e8f2c1c1",
+  "qwen": {
+    "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "quantization": "4-bit NF4 double-quantized base, emulated (quantize->dequantize round trip of every base Linear except lm_head; bitsandbytes has no Apple-silicon backend). Base frozen in fp16; LoRA weights fp32.",
+    "prompt": "local_reranker.classification_prompt (byte-identical to the notebook serving prompt)",
+    "target": "{\"label\":\"X\"} appended after the prompt, as in the notebook",
+    "loss": "completion-only (prompt tokens masked). The historical run used full-text loss.",
+    "max_length": 1024,
+    "truncation": "never truncates the label: prompts longer than max_length have the description, then bullet points, shortened until prompt+target fit",
+    "lora": {
+      "r": 16,
+      "alpha": 32,
+      "dropout": 0.05,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj"
+      ],
+      "bias": "none"
+    },
+    "optimizer": "AdamW (torch), weight_decay 0.0",
+    "learning_rate": 0.0002,
+    "scheduler": "cosine",
+    "warmup_ratio": 0.05,
+    "per_device_batch_size": 4,
+    "gradient_accumulation": 4,
+    "epochs": 1,
+    "max_grad_norm": 1.0,
+    "length_grouping": "shuffled mega-batches of 64 rows sorted by length (padding efficiency)",
+    "checkpoint_fractions": [
+      0.5,
+      1.0
+    ],
+    "selection": "checkpoint with the higher VALIDATION macro-F1 on validation_pairs (ties -> later checkpoint)",
+    "generation": {
+      "decoding": "greedy",
+      "max_new_tokens": 16,
+      "max_length": 1536,
+      "batch_size": 8,
+      "parse": "\"label\":\"X\" regex, fallback I",
+      "dtype": "float16"
+    }
+  },
+  "seed": 42,
+  "device": "mps",
+  "trainable_parameters": 2162688,
+  "quantized_linear_layers": 168,
+  "micro_batches": 2500,
+  "optimizer_steps": 625,
+  "checkpoint_steps": [
+    312,
+    625
+  ],
+  "effective_batch_size": 16,
+  "smoke_max_steps": null,
+  "provenance": {
+    "timestamp_utc": "2026-09-21T13:20:39.881698+00:00",
+    "git_commit": "3d49f033c6962a21f6a02eb1d7a9769ab4580d4a",
+    "git_tracked_changes_uncommitted": true,
+    "python": "3.12.14",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "library_versions": {
+      "numpy": "2.5.3",
+      "torch": "2.14.0",
+      "transformers": "5.17.0",
+      "peft": "0.21.0",
+      "scipy": "1.18.1"
+    }
+  }
+}

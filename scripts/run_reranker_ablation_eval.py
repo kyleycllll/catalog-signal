@@ -58,13 +58,13 @@ def main() -> None:
     if sha256_file(test_cfg["fixed_candidates"]) != test_cfg["fixed_candidates_sha256"]:
         raise SystemExit("Fixed candidate file changed")
     fixed = {}
-    for line in Path(test_cfg["fixed_candidates"]).read_text(encoding="utf-8").splitlines():
+    for line in filter(None, Path(test_cfg["fixed_candidates"]).read_text(encoding="utf-8").split("\n")):
         row = json.loads(line)
         fixed[row["query_id"]] = row
     test_queries = [q for q in load_queries(base["labels"], "test") if q["query_id"] in fixed]
     queries = stable_sample(test_queries, test_cfg["max_queries"], config["seed"])
     baseline_dir = Path(base["output_root"]) / base["run_id"]
-    historical_ids = [json.loads(line)["query_id"] for line in (baseline_dir / "reranking_per_query.jsonl").read_text().splitlines()]
+    historical_ids = [json.loads(line)["query_id"] for line in (baseline_dir / "reranking_per_query.jsonl").read_text(encoding="utf-8").split("\n") if line]
     if [q["query_id"] for q in queries] != historical_ids:
         raise SystemExit("Query sample differs from the historical reranking evaluation")
     if smoke:

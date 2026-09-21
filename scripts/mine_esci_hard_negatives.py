@@ -152,7 +152,7 @@ def merge(config, args, output: Path, train_available: int, queries) -> None:
     rows, shard_info = [], []
     for index in range(args.num_shards):
         shard = work / f"hard_negative_mining.shard{index}of{args.num_shards}.jsonl"
-        rows.extend(json.loads(line) for line in shard.read_text(encoding="utf-8").splitlines())
+        rows.extend(json.loads(line) for line in shard.read_text(encoding="utf-8").split("\n") if line)
         shard_info.append(json.loads(shard.with_suffix(".done.json").read_text(encoding="utf-8")))
     expected = sorted(q["query_id"] for q in queries)
     rows.sort(key=lambda row: row["query_id"])

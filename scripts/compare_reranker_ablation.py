@@ -56,7 +56,7 @@ def main() -> None:
     seed, samples = config["seed"], config["test"]["bootstrap_samples"]
 
     historical_path = Path(base["output_root"]) / base["run_id"] / "reranking_per_query.jsonl"
-    hist = [json.loads(line) for line in historical_path.read_text().splitlines()]
+    hist = [json.loads(line) for line in historical_path.read_text(encoding="utf-8").split("\n") if line]
     order = [row["query_id"] for row in hist]
     rows: dict[str, dict[str, dict]] = {"no_rerank": {}, "historical_qwen": {}}
     kinds = {"no_rerank": "none", "historical_qwen": "qwen"}
@@ -71,7 +71,7 @@ def main() -> None:
         name, kind = spec.split("=")
         path = test_dir / f"{name}_per_query.jsonl"
         sources[name] = {"path": str(path), "sha256": sha256_file(path)}
-        data = [json.loads(line) for line in path.read_text().splitlines()]
+        data = [json.loads(line) for line in path.read_text(encoding="utf-8").split("\n") if line]
         if [r["query_id"] for r in data] != order:
             raise SystemExit(f"{name}: query IDs differ from the historical evaluation")
         for r in data:

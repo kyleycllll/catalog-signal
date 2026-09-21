@@ -38,8 +38,8 @@ def main() -> None:
         raise SystemExit("Training data changed since the manifest was written")
     if sha256_file(manifest["validation_pairs"]["path"]) != manifest["validation_pairs"]["sha256"]:
         raise SystemExit("Validation pairs changed since the manifest was written")
-    rows = [json.loads(line) for line in Path(variant["path"]).read_text(encoding="utf-8").splitlines()]
-    val_rows = [json.loads(line) for line in Path(manifest["validation_pairs"]["path"]).read_text(encoding="utf-8").splitlines()]
+    rows = [json.loads(line) for line in Path(variant["path"]).read_text(encoding="utf-8").split("\n") if line]
+    val_rows = [json.loads(line) for line in Path(manifest["validation_pairs"]["path"]).read_text(encoding="utf-8").split("\n") if line]
     if {row["query_id"] for row in rows} & {row["query_id"] for row in val_rows}:
         raise SystemExit("Train/validation query overlap")
 

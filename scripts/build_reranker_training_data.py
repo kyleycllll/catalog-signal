@@ -82,7 +82,7 @@ def main() -> None:
     variant_a = {label: random.Random(f"{seed}:{label}:A").sample(by_label[label], per_label) for label in LABELS}
 
     # ---- B: same E/S rows; I/C replaced by hybrid-mined hard negatives ----
-    mined_rows = [json.loads(line) for line in (output / "hard_negative_mining.jsonl").read_text(encoding="utf-8").splitlines()]
+    mined_rows = [json.loads(line) for line in (output / "hard_negative_mining.jsonl").read_text(encoding="utf-8").split("\n") if line]
     assert all(row["query_id"] in ids["train"] for row in mined_rows), "mined a non-train query"
     variant_b = {"E": variant_a["E"], "S": variant_a["S"]}
     supply: dict[str, int] = {}

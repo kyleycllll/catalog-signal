@@ -29,7 +29,7 @@ def main() -> None:
     pairs = manifest["validation_pairs"]
     if sha256_file(pairs["path"]) != pairs["sha256"]:
         raise SystemExit("Validation pairs changed since the manifest was written")
-    rows = [json.loads(line) for line in Path(pairs["path"]).read_text(encoding="utf-8").splitlines()]
+    rows = [json.loads(line) for line in Path(pairs["path"]).read_text(encoding="utf-8").split("\n") if line]
     generation = config["qwen"]["generation"]
     model = LocalAdapterReranker(
         args.adapter, base_model=config["qwen"]["base_model"], dtype=generation["dtype"],

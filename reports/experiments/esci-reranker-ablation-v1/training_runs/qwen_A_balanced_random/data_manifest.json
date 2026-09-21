@@ -1,0 +1,23 @@
+{
+  "variant": "A_balanced_random",
+  "path": "data/esci/ablation/A_balanced_random.jsonl",
+  "sha256": "515cef18c0eed79ed3be85c64a6810b4da74cdd1554eec0c156a1768dfa32bce",
+  "rows": 10000,
+  "label_counts": {
+    "E": 2500,
+    "C": 2500,
+    "S": 2500,
+    "I": 2500
+  },
+  "distinct_queries": 7193,
+  "identity_csv": "reports/experiments/esci-reranker-ablation-v1/training_rows_A_balanced_random.csv",
+  "identity_csv_sha256": "caeaac6f806cf571c4d9ae0fb0e3f1a7f374a0af501ffbcc4b8cd16e47da2e78",
+  "rows_prompt_shortened_to_fit": 6,
+  "token_length": {
+    "mean": 320.3819,
+    "max": 1024
+  },
+  "leakage_check": "no training query is a validation or test query (asserted)",
+  "training_data_manifest": "reports/experiments/esci-reranker-ablation-v1/training_data_manifest.json",
+  "training_data_manifest_sha256": "e225e570d51ba39dce0edb5ba73fb773c53273ad2da319701a23e4caa623c18b"
+}

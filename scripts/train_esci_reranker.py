@@ -43,7 +43,7 @@ def main() -> None:
     data_path = Path(variant["path"])
     if sha256_file(data_path) != variant["sha256"]:
         raise SystemExit("Training data changed since the manifest was written")
-    rows = [json.loads(line) for line in data_path.read_text(encoding="utf-8").splitlines()]
+    rows = [json.loads(line) for line in data_path.read_text(encoding="utf-8").split("\n") if line]
     base = json.loads(Path(config["base_config"]).read_text(encoding="utf-8"))
     import pyarrow.parquet as pq
 

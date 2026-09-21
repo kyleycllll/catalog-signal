@@ -1,0 +1,99 @@
+{
+  "adapter": "models/esci-qwen-lora",
+  "adapter_sha256": "72fca8548a21ebd0a000e73ecea6328877af5d77a53c063cbb1f591ff2146204",
+  "validation_pairs_sha256": "a85bec886108f15c46c4e9a6356ce3e31a5ac3ab8e03e69563cfdc27855dbd60",
+  "pairs": 2279,
+  "unparsed_generations": 0,
+  "seconds": 373.5,
+  "pairs_per_second": 6.102,
+  "inference": "mps, nf4-emulated base, float16, batch 8, greedy",
+  "validation": {
+    "examples": 1679,
+    "accuracy": 0.35080405002977966,
+    "macro_f1": 0.2219987018049666,
+    "per_label": {
+      "E": {
+        "precision": 0.5080482897384306,
+        "recall": 0.5851680185399768,
+        "f1": 0.5438879913839526,
+        "support": 863
+      },
+      "S": {
+        "precision": 0.2357142857142857,
+        "recall": 0.0616822429906542,
+        "f1": 0.09777777777777777,
+        "support": 535
+      },
+      "C": {
+        "precision": 0.08732394366197183,
+        "recall": 0.21830985915492956,
+        "f1": 0.12474849094567404,
+        "support": 142
+      },
+      "I": {
+        "precision": 0.10526315789473684,
+        "recall": 0.14388489208633093,
+        "f1": 0.121580547112462,
+        "support": 139
+      }
+    },
+    "confusion_matrix": {
+      "E": [
+        505,
+        83,
+        182,
+        93
+      ],
+      "S": [
+        337,
+        33,
+        113,
+        52
+      ],
+      "C": [
+        75,
+        11,
+        31,
+        25
+      ],
+      "I": [
+        77,
+        13,
+        29,
+        20
+      ]
+    },
+    "confusion_matrix_labels": [
+      "E",
+      "S",
+      "C",
+      "I"
+    ],
+    "e_to_c": 182,
+    "e_to_i": 93,
+    "e_to_c_or_i_rate": 0.3186558516801854,
+    "unjudged_prediction_counts": {
+      "S": 53,
+      "E": 348,
+      "I": 72,
+      "C": 127
+    },
+    "unjudged_predicted_e_or_s_rate": 0.6683333333333333,
+    "unjudged_predicted_e_rate": 0.58
+  },
+  "provenance": {
+    "timestamp_utc": "2026-09-21T18:19:45.235136+00:00",
+    "git_commit": "3d49f033c6962a21f6a02eb1d7a9769ab4580d4a",
+    "git_tracked_changes_uncommitted": true,
+    "python": "3.12.14",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "library_versions": {
+      "numpy": "2.5.3",
+      "torch": "2.14.0",
+      "transformers": "5.17.0",
+      "peft": "0.21.0",
+      "scipy": "1.18.1"
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "adapter": "models/ablation/qwen_B_hard_negative/checkpoint-312",
+  "adapter_sha256": "f13d78094a74a2793f8f7eac9ee535a56e5fd0b58658e0ded9bc63f9d4a40039",
+  "validation_pairs_sha256": "a85bec886108f15c46c4e9a6356ce3e31a5ac3ab8e03e69563cfdc27855dbd60",
+  "pairs": 2279,
+  "unparsed_generations": 0,
+  "seconds": 373.1,
+  "pairs_per_second": 6.108,
+  "inference": "mps, nf4-emulated base, float16, batch 8, greedy",
+  "validation": {
+    "examples": 1679,
+    "accuracy": 0.22870756402620607,
+    "macro_f1": 0.20064416369480378,
+    "per_label": {
+      "E": {
+        "precision": 0.5924932975871313,
+        "recall": 0.25608342989571264,
+        "f1": 0.35760517799352753,
+        "support": 863
+      },
+      "S": {
+        "precision": 0.36619718309859156,
+        "recall": 0.048598130841121495,
+        "f1": 0.0858085808580858,
+        "support": 535
+      },
+      "C": {
+        "precision": 0.10579064587973273,
+        "recall": 0.6690140845070423,
+        "f1": 0.18269230769230768,
+        "support": 142
+      },
+      "I": {
+        "precision": 0.12462908011869436,
+        "recall": 0.302158273381295,
+        "f1": 0.17647058823529413,
+        "support": 139
+      }
+    },
+    "confusion_matrix": {
+      "E": [
+        221,
+        32,
+        440,
+        170
+      ],
+      "S": [
+        122,
+        26,
+        297,
+        90
+      ],
+      "C": [
+        4,
+        8,
+        95,
+        35
+      ],
+      "I": [
+        26,
+        5,
+        66,
+        42
+      ]
+    },
+    "confusion_matrix_labels": [
+      "E",
+      "S",
+      "C",
+      "I"
+    ],
+    "e_to_c": 440,
+    "e_to_i": 170,
+    "e_to_c_or_i_rate": 0.7068366164542295,
+    "unjudged_prediction_counts": {
+      "I": 160,
+      "C": 286,
+      "E": 124,
+      "S": 30
+    },
+    "unjudged_predicted_e_or_s_rate": 0.25666666666666665,
+    "unjudged_predicted_e_rate": 0.20666666666666667
+  },
+  "provenance": {
+    "timestamp_utc": "2026-09-21T18:07:05.432081+00:00",
+    "git_commit": "3d49f033c6962a21f6a02eb1d7a9769ab4580d4a",
+    "git_tracked_changes_uncommitted": true,
+    "python": "3.12.14",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "library_versions": {
+      "numpy": "2.5.3",
+      "torch": "2.14.0",
+      "transformers": "5.17.0",
+      "peft": "0.21.0",
+      "scipy": "1.18.1"
+    }
+  }
+}

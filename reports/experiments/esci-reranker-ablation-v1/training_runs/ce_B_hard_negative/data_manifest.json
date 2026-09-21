@@ -1,0 +1,31 @@
+{
+  "variant": "B_hard_negative",
+  "path": "data/esci/ablation/B_hard_negative.jsonl",
+  "sha256": "d8f6dc3c04cb0e7c9822d389cdb257963f5c03858c60c422eb2b5fe4758baf72",
+  "rows": 10000,
+  "label_counts": {
+    "C": 2500,
+    "E": 2500,
+    "I": 2500,
+    "S": 2500
+  },
+  "distinct_queries": 7067,
+  "identity_csv": "reports/experiments/esci-reranker-ablation-v1/training_rows_B_hard_negative.csv",
+  "identity_csv_sha256": "7be83d61cc843bf6a57eb09d0abcc109f3eb4219028c59ff0ef46da0c319cffd",
+  "validation_pairs": {
+    "path": "data/esci/ablation/validation_pairs.jsonl",
+    "sha256": "a85bec886108f15c46c4e9a6356ce3e31a5ac3ab8e03e69563cfdc27855dbd60",
+    "rows": 2279,
+    "queries": 300,
+    "label_counts": {
+      "S": 535,
+      "E": 863,
+      "UNJUDGED": 600,
+      "C": 142,
+      "I": 139
+    },
+    "rule": "all judged products in the validation hybrid top-40 plus the first 2 unjudged per query (label UNJUDGED; excluded from classification metrics)",
+    "source": "reports/experiments/esci-us-heldout-v1/retrieval_per_query.jsonl"
+  },
+  "leakage_check": "train and validation query IDs disjoint (asserted); no test data read"
+}
