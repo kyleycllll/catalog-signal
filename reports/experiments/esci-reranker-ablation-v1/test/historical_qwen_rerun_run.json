@@ -1,0 +1,30 @@
+{
+  "system": "historical_qwen_rerun",
+  "kind": "qwen",
+  "model": "models/esci-qwen-lora",
+  "model_sha256": "72fca8548a21ebd0a000e73ecea6328877af5d77a53c063cbb1f591ff2146204",
+  "config_sha256": "8842d7cad0a68833b1230166e9421ac1dcf4143ad07892c106909d20e8f2c1c1",
+  "fixed_candidates_sha256": "44201cf3c9defb9eb378dee1390f61c463a4f7841ef9a13b5587fa3778506ecd",
+  "queries": 200,
+  "query_ids_equal_historical": true,
+  "smoke": false,
+  "per_query": "reports/experiments/esci-reranker-ablation-v1/test/historical_qwen_rerun_per_query.jsonl",
+  "per_query_sha256": "1889a8125a637ef54abe9e716a30c0263caa44ac0c8eb6dee81ba4314248e022",
+  "latency_csv": "reports/experiments/esci-reranker-ablation-v1/test/historical_qwen_rerun_latency.csv",
+  "device": "mps",
+  "provenance": {
+    "timestamp_utc": "2026-09-21T20:03:14.990692+00:00",
+    "git_commit": "b54dd1e32c0da50a4c10b6e282cd6bd4bd618ea6",
+    "git_tracked_changes_uncommitted": false,
+    "python": "3.12.14",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "library_versions": {
+      "numpy": "2.5.3",
+      "torch": "2.14.0",
+      "transformers": "5.17.0",
+      "peft": "0.21.0",
+      "scipy": "1.18.1"
+    }
+  }
+}

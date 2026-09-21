@@ -1,0 +1,29 @@
+{
+  "system": "cross_encoder",
+  "kind": "cross_encoder",
+  "model": "models/ablation/ce_A_balanced_random/epoch-3",
+  "model_sha256": "faaa4240fc573cc197621cecc89b7a7912f8ed1cc4dd7d72840487bae80afbec",
+  "config_sha256": "8842d7cad0a68833b1230166e9421ac1dcf4143ad07892c106909d20e8f2c1c1",
+  "fixed_candidates_sha256": "44201cf3c9defb9eb378dee1390f61c463a4f7841ef9a13b5587fa3778506ecd",
+  "queries": 200,
+  "query_ids_equal_historical": true,
+  "smoke": false,
+  "per_query": "reports/experiments/esci-reranker-ablation-v1/test/cross_encoder_per_query.jsonl",
+  "per_query_sha256": "bf92c9d1c5b704ebf38768b17d95d52a0545a71f8bf6c85e77364e832b7bc392",
+  "latency_csv": "reports/experiments/esci-reranker-ablation-v1/test/cross_encoder_latency.csv",
+  "device": "mps",
+  "provenance": {
+    "timestamp_utc": "2026-09-21T18:40:38.109817+00:00",
+    "git_commit": "b54dd1e32c0da50a4c10b6e282cd6bd4bd618ea6",
+    "git_tracked_changes_uncommitted": false,
+    "python": "3.12.14",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "library_versions": {
+      "numpy": "2.5.3",
+      "torch": "2.14.0",
+      "transformers": "5.17.0",
+      "scipy": "1.18.1"
+    }
+  }
+}

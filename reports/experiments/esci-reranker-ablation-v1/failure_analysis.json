@@ -1,0 +1,1050 @@
+{
+  "slices": {
+    "has_digit": {
+      "queries": 36,
+      "mean_ndcg@10": {
+        "no_rerank": 0.24398407565644822,
+        "historical_qwen": 0.1824207905484359,
+        "qwen_A_balanced_random": 0.2220248081750278,
+        "qwen_B_hard_negative": 0.16524493709685859,
+        "cross_encoder": 0.2794222851299049,
+        "cross_encoder_argmax_label": 0.2681800283559263,
+        "historical_qwen_rerun": 0.1824207905484359
+      }
+    },
+    "short_query_le_2_tokens": {
+      "queries": 39,
+      "mean_ndcg@10": {
+        "no_rerank": 0.24065901847174098,
+        "historical_qwen": 0.19133565988918066,
+        "qwen_A_balanced_random": 0.2641321907106278,
+        "qwen_B_hard_negative": 0.140533162110841,
+        "cross_encoder": 0.2620221223144303,
+        "cross_encoder_argmax_label": 0.24785203361681982,
+        "historical_qwen_rerun": 0.19133565988918066
+      }
+    },
+    "lexical_mismatch_token (typo/rare-entity proxy)": {
+      "queries": 36,
+      "mean_ndcg@10": {
+        "no_rerank": 0.12971114735269856,
+        "historical_qwen": 0.1264362860197208,
+        "qwen_A_balanced_random": 0.1353651004361025,
+        "qwen_B_hard_negative": 0.1245309561280567,
+        "cross_encoder": 0.15157548575762822,
+        "cross_encoder_argmax_label": 0.13574546872113513,
+        "historical_qwen_rerun": 0.1264362860197208
+      }
+    },
+    "pre_top1_is_known_E": {
+      "queries": 54,
+      "mean_ndcg@10": {
+        "no_rerank": 0.5895902092771002,
+        "historical_qwen": 0.41129762165542366,
+        "qwen_A_balanced_random": 0.520260499920411,
+        "qwen_B_hard_negative": 0.34093660331648623,
+        "cross_encoder": 0.5998585642803094,
+        "cross_encoder_argmax_label": 0.5762142511725318,
+        "historical_qwen_rerun": 0.41129762165542366
+      }
+    }
+  },
+  "representative_queries": [
+    {
+      "query": "vsco collage poster",
+      "ndcg@10": {
+        "no_rerank": 0.599,
+        "historical_qwen": 0.0,
+        "qwen_A_balanced_random": 0.0,
+        "qwen_B_hard_negative": 0.599,
+        "cross_encoder": 0.599,
+        "cross_encoder_argmax_label": 0.599,
+        "historical_qwen_rerun": 0.0
+      }
+    },
+    {
+      "query": "xyliwhite mouthwash",
+      "ndcg@10": {
+        "no_rerank": 0.779,
+        "historical_qwen": 0.258,
+        "qwen_A_balanced_random": 0.801,
+        "qwen_B_hard_negative": 0.6,
+        "cross_encoder": 0.922,
+        "cross_encoder_argmax_label": 0.886,
+        "historical_qwen_rerun": 0.258
+      }
+    },
+    {
+      "query": "habanero hot sauce cholula organic",
+      "ndcg@10": {
+        "no_rerank": 0.877,
+        "historical_qwen": 0.221,
+        "qwen_A_balanced_random": 0.407,
+        "qwen_B_hard_negative": 0.449,
+        "cross_encoder": 0.825,
+        "cross_encoder_argmax_label": 0.784,
+        "historical_qwen_rerun": 0.221
+      }
+    },
+    {
+      "query": "rue",
+      "ndcg@10": {
+        "no_rerank": 0.221,
+        "historical_qwen": 0.58,
+        "qwen_A_balanced_random": 1.0,
+        "qwen_B_hard_negative": 0.494,
+        "cross_encoder": 0.376,
+        "cross_encoder_argmax_label": 0.456,
+        "historical_qwen_rerun": 0.58
+      }
+    }
+  ],
+  "pairwise_extremes": {
+    "historical_qwen_vs_no_rerank": {
+      "largest_losses": [
+        {
+          "query": "habanero hot sauce cholula organic",
+          "no_rerank": 0.877,
+          "historical_qwen": 0.221
+        },
+        {
+          "query": "vsco collage poster",
+          "no_rerank": 0.599,
+          "historical_qwen": 0.0
+        },
+        {
+          "query": "xyliwhite mouthwash",
+          "no_rerank": 0.779,
+          "historical_qwen": 0.258
+        },
+        {
+          "query": "indiana trucker hat",
+          "no_rerank": 0.693,
+          "historical_qwen": 0.227
+        },
+        {
+          "query": "im dead now what",
+          "no_rerank": 0.721,
+          "historical_qwen": 0.257
+        },
+        {
+          "query": "david yurman medium braclet 11 mm",
+          "no_rerank": 0.462,
+          "historical_qwen": 0.0
+        },
+        {
+          "query": "kalm assure",
+          "no_rerank": 0.425,
+          "historical_qwen": 0.0
+        },
+        {
+          "query": "solar charge for 6 volt",
+          "no_rerank": 0.444,
+          "historical_qwen": 0.036
+        }
+      ],
+      "largest_gains": [
+        {
+          "query": "rue",
+          "no_rerank": 0.221,
+          "historical_qwen": 0.58
+        },
+        {
+          "query": "gift boxes without lids",
+          "no_rerank": 0.042,
+          "historical_qwen": 0.314
+        },
+        {
+          "query": "logitech wireless keyboard",
+          "no_rerank": 0.227,
+          "historical_qwen": 0.484
+        },
+        {
+          "query": "loveseat pillow covers",
+          "no_rerank": 0.0,
+          "historical_qwen": 0.22
+        },
+        {
+          "query": "brick barbecue grill kit",
+          "no_rerank": 0.0,
+          "historical_qwen": 0.208
+        },
+        {
+          "query": "gears of wars decal",
+          "no_rerank": 0.202,
+          "historical_qwen": 0.403
+        },
+        {
+          "query": "engn shred",
+          "no_rerank": 0.15,
+          "historical_qwen": 0.347
+        },
+        {
+          "query": "girl pineapple baby blanket",
+          "no_rerank": 0.217,
+          "historical_qwen": 0.39
+        }
+      ]
+    },
+    "qwen_A_balanced_random_vs_no_rerank": {
+      "largest_losses": [
+        {
+          "query": "vsco collage poster",
+          "no_rerank": 0.599,
+          "qwen_A_balanced_random": 0.0
+        },
+        {
+          "query": "habanero hot sauce cholula organic",
+          "no_rerank": 0.877,
+          "qwen_A_balanced_random": 0.407
+        },
+        {
+          "query": "pink water beads",
+          "no_rerank": 0.752,
+          "qwen_A_balanced_random": 0.393
+        },
+        {
+          "query": "happy anniversary card 30 years",
+          "no_rerank": 0.857,
+          "qwen_A_balanced_random": 0.541
+        },
+        {
+          "query": "hyundai tucson rims",
+          "no_rerank": 0.307,
+          "qwen_A_balanced_random": 0.0
+        },
+        {
+          "query": "chelsea stadium soccer cards",
+          "no_rerank": 0.575,
+          "qwen_A_balanced_random": 0.271
+        },
+        {
+          "query": "10oz tervis cups without lid",
+          "no_rerank": 0.676,
+          "qwen_A_balanced_random": 0.374
+        },
+        {
+          "query": "sigma 105mm f1.4 art nikon",
+          "no_rerank": 0.66,
+          "qwen_A_balanced_random": 0.366
+        }
+      ],
+      "largest_gains": [
+        {
+          "query": "rue",
+          "no_rerank": 0.221,
+          "qwen_A_balanced_random": 1.0
+        },
+        {
+          "query": "black lights for parties",
+          "no_rerank": 0.234,
+          "qwen_A_balanced_random": 0.552
+        },
+        {
+          "query": "princess kindergarten backpack",
+          "no_rerank": 0.285,
+          "qwen_A_balanced_random": 0.55
+        },
+        {
+          "query": "ddj400",
+          "no_rerank": 0.263,
+          "qwen_A_balanced_random": 0.482
+        },
+        {
+          "query": "lululemon tee shirts women",
+          "no_rerank": 0.112,
+          "qwen_A_balanced_random": 0.289
+        },
+        {
+          "query": "apple iphone 7 plus gsm unlocked",
+          "no_rerank": 0.113,
+          "qwen_A_balanced_random": 0.288
+        },
+        {
+          "query": "stick fix hair wax men",
+          "no_rerank": 0.267,
+          "qwen_A_balanced_random": 0.431
+        },
+        {
+          "query": "tin ceiling tiles bronze",
+          "no_rerank": 0.778,
+          "qwen_A_balanced_random": 0.927
+        }
+      ]
+    },
+    "qwen_B_hard_negative_vs_no_rerank": {
+      "largest_losses": [
+        {
+          "query": "calcium for reptiles without d3",
+          "no_rerank": 0.707,
+          "qwen_B_hard_negative": 0.0
+        },
+        {
+          "query": "emirates toy plane",
+          "no_rerank": 0.776,
+          "qwen_B_hard_negative": 0.124
+        },
+        {
+          "query": "indiana trucker hat",
+          "no_rerank": 0.693,
+          "qwen_B_hard_negative": 0.099
+        },
+        {
+          "query": "chelsea stadium soccer cards",
+          "no_rerank": 0.575,
+          "qwen_B_hard_negative": 0.0
+        },
+        {
+          "query": "freshkote lubricant eye drops",
+          "no_rerank": 0.503,
+          "qwen_B_hard_negative": 0.0
+        },
+        {
+          "query": "tradesmart shooting earmuffs",
+          "no_rerank": 0.581,
+          "qwen_B_hard_negative": 0.092
+        },
+        {
+          "query": "apres gel x kit",
+          "no_rerank": 0.665,
+          "qwen_B_hard_negative": 0.188
+        },
+        {
+          "query": "bts earrings",
+          "no_rerank": 0.538,
+          "qwen_B_hard_negative": 0.064
+        }
+      ],
+      "largest_gains": [
+        {
+          "query": "king dedede chrisymas",
+          "no_rerank": 0.146,
+          "qwen_B_hard_negative": 0.732
+        },
+        {
+          "query": "engn shred",
+          "no_rerank": 0.15,
+          "qwen_B_hard_negative": 0.497
+        },
+        {
+          "query": "rue",
+          "no_rerank": 0.221,
+          "qwen_B_hard_negative": 0.494
+        },
+        {
+          "query": "apple iphone 7 plus gsm unlocked",
+          "no_rerank": 0.113,
+          "qwen_B_hard_negative": 0.38
+        },
+        {
+          "query": "logitech wireless keyboard",
+          "no_rerank": 0.227,
+          "qwen_B_hard_negative": 0.475
+        },
+        {
+          "query": "midwest deluxe critter nation",
+          "no_rerank": 0.274,
+          "qwen_B_hard_negative": 0.454
+        },
+        {
+          "query": "lululemon tee shirts women",
+          "no_rerank": 0.112,
+          "qwen_B_hard_negative": 0.289
+        },
+        {
+          "query": "kindle not ad supported",
+          "no_rerank": 0.0,
+          "qwen_B_hard_negative": 0.168
+        }
+      ]
+    },
+    "cross_encoder_vs_no_rerank": {
+      "largest_losses": [
+        {
+          "query": "10oz tervis cups without lid",
+          "no_rerank": 0.676,
+          "cross_encoder": 0.449
+        },
+        {
+          "query": "nfl white autograph football",
+          "no_rerank": 0.69,
+          "cross_encoder": 0.481
+        },
+        {
+          "query": "rachael ray marine blue pot",
+          "no_rerank": 0.92,
+          "cross_encoder": 0.723
+        },
+        {
+          "query": "wireless charging power bank magetic magetic",
+          "no_rerank": 0.284,
+          "cross_encoder": 0.099
+        },
+        {
+          "query": "traceable designer",
+          "no_rerank": 0.397,
+          "cross_encoder": 0.251
+        },
+        {
+          "query": "vampire top hat headband",
+          "no_rerank": 0.174,
+          "cross_encoder": 0.05
+        },
+        {
+          "query": "'i'm tired' 'i'm not tired' tshirts",
+          "no_rerank": 0.503,
+          "cross_encoder": 0.38
+        },
+        {
+          "query": "hidden fates elite trainer box",
+          "no_rerank": 0.617,
+          "cross_encoder": 0.52
+        }
+      ],
+      "largest_gains": [
+        {
+          "query": "king dedede chrisymas",
+          "no_rerank": 0.146,
+          "cross_encoder": 0.486
+        },
+        {
+          "query": "redi whip cream",
+          "no_rerank": 0.169,
+          "cross_encoder": 0.506
+        },
+        {
+          "query": "chelsea stadium soccer cards",
+          "no_rerank": 0.575,
+          "cross_encoder": 0.903
+        },
+        {
+          "query": "computer sound systems",
+          "no_rerank": 0.11,
+          "cross_encoder": 0.389
+        },
+        {
+          "query": "days of the dead anthology black bedsheet books",
+          "no_rerank": 0.145,
+          "cross_encoder": 0.422
+        },
+        {
+          "query": "30 oz coffee mug",
+          "no_rerank": 0.041,
+          "cross_encoder": 0.302
+        },
+        {
+          "query": "ddj400",
+          "no_rerank": 0.263,
+          "cross_encoder": 0.52
+        },
+        {
+          "query": "kids frozen rain boots",
+          "no_rerank": 0.242,
+          "cross_encoder": 0.491
+        }
+      ]
+    },
+    "cross_encoder_argmax_label_vs_no_rerank": {
+      "largest_losses": [
+        {
+          "query": "otostick",
+          "no_rerank": 1.0,
+          "cross_encoder_argmax_label": 0.564
+        },
+        {
+          "query": "10oz tervis cups without lid",
+          "no_rerank": 0.676,
+          "cross_encoder_argmax_label": 0.317
+        },
+        {
+          "query": "solar charge for 6 volt",
+          "no_rerank": 0.444,
+          "cross_encoder_argmax_label": 0.191
+        },
+        {
+          "query": "traceable designer",
+          "no_rerank": 0.397,
+          "cross_encoder_argmax_label": 0.154
+        },
+        {
+          "query": "hidden fates elite trainer box",
+          "no_rerank": 0.617,
+          "cross_encoder_argmax_label": 0.374
+        },
+        {
+          "query": "baby katan wrap",
+          "no_rerank": 0.519,
+          "cross_encoder_argmax_label": 0.28
+        },
+        {
+          "query": "mag 4 bolt cleaning tool",
+          "no_rerank": 0.235,
+          "cross_encoder_argmax_label": 0.0
+        },
+        {
+          "query": "evolved stars astronomy",
+          "no_rerank": 0.442,
+          "cross_encoder_argmax_label": 0.239
+        }
+      ],
+      "largest_gains": [
+        {
+          "query": "king dedede chrisymas",
+          "no_rerank": 0.146,
+          "cross_encoder_argmax_label": 0.463
+        },
+        {
+          "query": "30 oz coffee mug",
+          "no_rerank": 0.041,
+          "cross_encoder_argmax_label": 0.305
+        },
+        {
+          "query": "days of the dead anthology black bedsheet books",
+          "no_rerank": 0.145,
+          "cross_encoder_argmax_label": 0.405
+        },
+        {
+          "query": "kids frozen rain boots",
+          "no_rerank": 0.242,
+          "cross_encoder_argmax_label": 0.491
+        },
+        {
+          "query": "rue",
+          "no_rerank": 0.221,
+          "cross_encoder_argmax_label": 0.456
+        },
+        {
+          "query": "ddj400",
+          "no_rerank": 0.263,
+          "cross_encoder_argmax_label": 0.466
+        },
+        {
+          "query": "gears of wars decal",
+          "no_rerank": 0.202,
+          "cross_encoder_argmax_label": 0.403
+        },
+        {
+          "query": "pheromone sexy body oil",
+          "no_rerank": 0.388,
+          "cross_encoder_argmax_label": 0.589
+        }
+      ]
+    },
+    "historical_qwen_rerun_vs_no_rerank": {
+      "largest_losses": [
+        {
+          "query": "habanero hot sauce cholula organic",
+          "no_rerank": 0.877,
+          "historical_qwen_rerun": 0.221
+        },
+        {
+          "query": "vsco collage poster",
+          "no_rerank": 0.599,
+          "historical_qwen_rerun": 0.0
+        },
+        {
+          "query": "xyliwhite mouthwash",
+          "no_rerank": 0.779,
+          "historical_qwen_rerun": 0.258
+        },
+        {
+          "query": "indiana trucker hat",
+          "no_rerank": 0.693,
+          "historical_qwen_rerun": 0.227
+        },
+        {
+          "query": "im dead now what",
+          "no_rerank": 0.721,
+          "historical_qwen_rerun": 0.257
+        },
+        {
+          "query": "david yurman medium braclet 11 mm",
+          "no_rerank": 0.462,
+          "historical_qwen_rerun": 0.0
+        },
+        {
+          "query": "kalm assure",
+          "no_rerank": 0.425,
+          "historical_qwen_rerun": 0.0
+        },
+        {
+          "query": "solar charge for 6 volt",
+          "no_rerank": 0.444,
+          "historical_qwen_rerun": 0.036
+        }
+      ],
+      "largest_gains": [
+        {
+          "query": "rue",
+          "no_rerank": 0.221,
+          "historical_qwen_rerun": 0.58
+        },
+        {
+          "query": "gift boxes without lids",
+          "no_rerank": 0.042,
+          "historical_qwen_rerun": 0.314
+        },
+        {
+          "query": "logitech wireless keyboard",
+          "no_rerank": 0.227,
+          "historical_qwen_rerun": 0.484
+        },
+        {
+          "query": "loveseat pillow covers",
+          "no_rerank": 0.0,
+          "historical_qwen_rerun": 0.22
+        },
+        {
+          "query": "brick barbecue grill kit",
+          "no_rerank": 0.0,
+          "historical_qwen_rerun": 0.208
+        },
+        {
+          "query": "gears of wars decal",
+          "no_rerank": 0.202,
+          "historical_qwen_rerun": 0.403
+        },
+        {
+          "query": "engn shred",
+          "no_rerank": 0.15,
+          "historical_qwen_rerun": 0.347
+        },
+        {
+          "query": "girl pineapple baby blanket",
+          "no_rerank": 0.217,
+          "historical_qwen_rerun": 0.39
+        }
+      ]
+    },
+    "qwen_A_balanced_random_vs_historical_qwen": {
+      "largest_losses": [
+        {
+          "query": "gears of wars decal",
+          "historical_qwen": 0.403,
+          "qwen_A_balanced_random": 0.0
+        },
+        {
+          "query": "hyundai tucson rims",
+          "historical_qwen": 0.397,
+          "qwen_A_balanced_random": 0.0
+        },
+        {
+          "query": "sigma 105mm f1.4 art nikon",
+          "historical_qwen": 0.711,
+          "qwen_A_balanced_random": 0.366
+        },
+        {
+          "query": "apres gel x kit",
+          "historical_qwen": 0.761,
+          "qwen_A_balanced_random": 0.46
+        },
+        {
+          "query": "girl pineapple baby blanket",
+          "historical_qwen": 0.39,
+          "qwen_A_balanced_random": 0.103
+        },
+        {
+          "query": "top max",
+          "historical_qwen": 0.246,
+          "qwen_A_balanced_random": 0.0
+        },
+        {
+          "query": "mag 4 bolt cleaning tool",
+          "historical_qwen": 0.235,
+          "qwen_A_balanced_random": 0.0
+        },
+        {
+          "query": "loveseat pillow covers",
+          "historical_qwen": 0.22,
+          "qwen_A_balanced_random": 0.0
+        }
+      ],
+      "largest_gains": [
+        {
+          "query": "xyliwhite mouthwash",
+          "historical_qwen": 0.258,
+          "qwen_A_balanced_random": 0.801
+        },
+        {
+          "query": "indiana trucker hat",
+          "historical_qwen": 0.227,
+          "qwen_A_balanced_random": 0.693
+        },
+        {
+          "query": "im dead now what",
+          "historical_qwen": 0.257,
+          "qwen_A_balanced_random": 0.721
+        },
+        {
+          "query": "kalm assure",
+          "historical_qwen": 0.0,
+          "qwen_A_balanced_random": 0.425
+        },
+        {
+          "query": "rue",
+          "historical_qwen": 0.58,
+          "qwen_A_balanced_random": 1.0
+        },
+        {
+          "query": "traceable designer",
+          "historical_qwen": 0.0,
+          "qwen_A_balanced_random": 0.397
+        },
+        {
+          "query": "the art book for children",
+          "historical_qwen": 0.613,
+          "qwen_A_balanced_random": 1.0
+        },
+        {
+          "query": "calcium for reptiles without d3",
+          "historical_qwen": 0.395,
+          "qwen_A_balanced_random": 0.77
+        }
+      ]
+    },
+    "qwen_B_hard_negative_vs_historical_qwen": {
+      "largest_losses": [
+        {
+          "query": "apres gel x kit",
+          "historical_qwen": 0.761,
+          "qwen_B_hard_negative": 0.188
+        },
+        {
+          "query": "tradesmart shooting earmuffs",
+          "historical_qwen": 0.595,
+          "qwen_B_hard_negative": 0.092
+        },
+        {
+          "query": "bts earrings",
+          "historical_qwen": 0.538,
+          "qwen_B_hard_negative": 0.064
+        },
+        {
+          "query": "otostick",
+          "historical_qwen": 1.0,
+          "qwen_B_hard_negative": 0.571
+        },
+        {
+          "query": "sigma 105mm f1.4 art nikon",
+          "historical_qwen": 0.711,
+          "qwen_B_hard_negative": 0.297
+        },
+        {
+          "query": "emerson glasses",
+          "historical_qwen": 0.41,
+          "qwen_B_hard_negative": 0.0
+        },
+        {
+          "query": "heel o matic roping dummy",
+          "historical_qwen": 0.406,
+          "qwen_B_hard_negative": 0.0
+        },
+        {
+          "query": "emirates toy plane",
+          "historical_qwen": 0.525,
+          "qwen_B_hard_negative": 0.124
+        }
+      ],
+      "largest_gains": [
+        {
+          "query": "king dedede chrisymas",
+          "historical_qwen": 0.108,
+          "qwen_B_hard_negative": 0.732
+        },
+        {
+          "query": "vsco collage poster",
+          "historical_qwen": 0.0,
+          "qwen_B_hard_negative": 0.599
+        },
+        {
+          "query": "zeirbah",
+          "historical_qwen": 0.287,
+          "qwen_B_hard_negative": 0.645
+        },
+        {
+          "query": "xyliwhite mouthwash",
+          "historical_qwen": 0.258,
+          "qwen_B_hard_negative": 0.6
+        },
+        {
+          "query": "nfl white autograph football",
+          "historical_qwen": 0.354,
+          "qwen_B_hard_negative": 0.668
+        },
+        {
+          "query": "turquoise stand mixer",
+          "historical_qwen": 0.0,
+          "qwen_B_hard_negative": 0.294
+        },
+        {
+          "query": "im dead now what",
+          "historical_qwen": 0.257,
+          "qwen_B_hard_negative": 0.55
+        },
+        {
+          "query": "computer sound systems",
+          "historical_qwen": 0.0,
+          "qwen_B_hard_negative": 0.276
+        }
+      ]
+    },
+    "cross_encoder_vs_historical_qwen": {
+      "largest_losses": [
+        {
+          "query": "gift boxes without lids",
+          "historical_qwen": 0.314,
+          "cross_encoder": 0.033
+        },
+        {
+          "query": "loveseat pillow covers",
+          "historical_qwen": 0.22,
+          "cross_encoder": 0.0
+        },
+        {
+          "query": "rue",
+          "historical_qwen": 0.58,
+          "cross_encoder": 0.376
+        },
+        {
+          "query": "brick barbecue grill kit",
+          "historical_qwen": 0.208,
+          "cross_encoder": 0.048
+        },
+        {
+          "query": "sony telephoto lens",
+          "historical_qwen": 0.522,
+          "cross_encoder": 0.386
+        },
+        {
+          "query": "preemie boys clothes",
+          "historical_qwen": 0.271,
+          "cross_encoder": 0.145
+        },
+        {
+          "query": "samsung a10",
+          "historical_qwen": 0.511,
+          "cross_encoder": 0.39
+        },
+        {
+          "query": "pink desserts",
+          "historical_qwen": 0.134,
+          "cross_encoder": 0.013
+        }
+      ],
+      "largest_gains": [
+        {
+          "query": "xyliwhite mouthwash",
+          "historical_qwen": 0.258,
+          "cross_encoder": 0.922
+        },
+        {
+          "query": "chelsea stadium soccer cards",
+          "historical_qwen": 0.271,
+          "cross_encoder": 0.903
+        },
+        {
+          "query": "habanero hot sauce cholula organic",
+          "historical_qwen": 0.221,
+          "cross_encoder": 0.825
+        },
+        {
+          "query": "vsco collage poster",
+          "historical_qwen": 0.0,
+          "cross_encoder": 0.599
+        },
+        {
+          "query": "indiana trucker hat",
+          "historical_qwen": 0.227,
+          "cross_encoder": 0.764
+        },
+        {
+          "query": "solar charge for 6 volt",
+          "historical_qwen": 0.036,
+          "cross_encoder": 0.57
+        },
+        {
+          "query": "prismacolor premier colored pencils 72",
+          "historical_qwen": 0.373,
+          "cross_encoder": 0.894
+        },
+        {
+          "query": "david yurman medium braclet 11 mm",
+          "historical_qwen": 0.0,
+          "cross_encoder": 0.481
+        }
+      ]
+    },
+    "cross_encoder_argmax_label_vs_historical_qwen": {
+      "largest_losses": [
+        {
+          "query": "otostick",
+          "historical_qwen": 1.0,
+          "cross_encoder_argmax_label": 0.564
+        },
+        {
+          "query": "logitech wireless keyboard",
+          "historical_qwen": 0.484,
+          "cross_encoder_argmax_label": 0.227
+        },
+        {
+          "query": "10oz tervis cups without lid",
+          "historical_qwen": 0.567,
+          "cross_encoder_argmax_label": 0.317
+        },
+        {
+          "query": "hidden fates elite trainer box",
+          "historical_qwen": 0.617,
+          "cross_encoder_argmax_label": 0.374
+        },
+        {
+          "query": "baby katan wrap",
+          "historical_qwen": 0.519,
+          "cross_encoder_argmax_label": 0.28
+        },
+        {
+          "query": "mag 4 bolt cleaning tool",
+          "historical_qwen": 0.235,
+          "cross_encoder_argmax_label": 0.0
+        },
+        {
+          "query": "loveseat pillow covers",
+          "historical_qwen": 0.22,
+          "cross_encoder_argmax_label": 0.0
+        },
+        {
+          "query": "1 pint mason jars without words",
+          "historical_qwen": 0.195,
+          "cross_encoder_argmax_label": 0.031
+        }
+      ],
+      "largest_gains": [
+        {
+          "query": "xyliwhite mouthwash",
+          "historical_qwen": 0.258,
+          "cross_encoder_argmax_label": 0.886
+        },
+        {
+          "query": "indiana trucker hat",
+          "historical_qwen": 0.227,
+          "cross_encoder_argmax_label": 0.83
+        },
+        {
+          "query": "vsco collage poster",
+          "historical_qwen": 0.0,
+          "cross_encoder_argmax_label": 0.599
+        },
+        {
+          "query": "habanero hot sauce cholula organic",
+          "historical_qwen": 0.221,
+          "cross_encoder_argmax_label": 0.784
+        },
+        {
+          "query": "prismacolor premier colored pencils 72",
+          "historical_qwen": 0.373,
+          "cross_encoder_argmax_label": 0.897
+        },
+        {
+          "query": "david yurman medium braclet 11 mm",
+          "historical_qwen": 0.0,
+          "cross_encoder_argmax_label": 0.462
+        },
+        {
+          "query": "happy anniversary card 30 years",
+          "historical_qwen": 0.536,
+          "cross_encoder_argmax_label": 0.969
+        },
+        {
+          "query": "chelsea stadium soccer cards",
+          "historical_qwen": 0.271,
+          "cross_encoder_argmax_label": 0.665
+        }
+      ]
+    },
+    "historical_qwen_rerun_vs_historical_qwen": {
+      "largest_losses": [
+        {
+          "query": "temporary red hair spray",
+          "historical_qwen": 0.483,
+          "historical_qwen_rerun": 0.483
+        },
+        {
+          "query": "the art book for children",
+          "historical_qwen": 0.613,
+          "historical_qwen_rerun": 0.613
+        },
+        {
+          "query": "the journey of not knowing",
+          "historical_qwen": 0.465,
+          "historical_qwen_rerun": 0.465
+        },
+        {
+          "query": "argyle sweater set",
+          "historical_qwen": 0.275,
+          "historical_qwen_rerun": 0.275
+        },
+        {
+          "query": "things for 1 dollar",
+          "historical_qwen": 0.0,
+          "historical_qwen_rerun": 0.0
+        },
+        {
+          "query": "tin ceiling tiles bronze",
+          "historical_qwen": 0.691,
+          "historical_qwen_rerun": 0.691
+        },
+        {
+          "query": "tire inflator digital",
+          "historical_qwen": 0.0,
+          "historical_qwen_rerun": 0.0
+        },
+        {
+          "query": "top max",
+          "historical_qwen": 0.246,
+          "historical_qwen_rerun": 0.246
+        }
+      ],
+      "largest_gains": [
+        {
+          "query": "apres gel x kit",
+          "historical_qwen": 0.761,
+          "historical_qwen_rerun": 0.761
+        },
+        {
+          "query": "stone and bram curtain sheer",
+          "historical_qwen": 0.449,
+          "historical_qwen_rerun": 0.449
+        },
+        {
+          "query": "apple watch 38mm bands trendy",
+          "historical_qwen": 0.0,
+          "historical_qwen_rerun": 0.0
+        },
+        {
+          "query": "stick fix hair wax men",
+          "historical_qwen": 0.28,
+          "historical_qwen_rerun": 0.28
+        },
+        {
+          "query": "star wars the rise of skywalker mask",
+          "historical_qwen": 0.522,
+          "historical_qwen_rerun": 0.522
+        },
+        {
+          "query": "stand mixer",
+          "historical_qwen": 0.073,
+          "historical_qwen_rerun": 0.073
+        },
+        {
+          "query": "apple iphone 7 plus gsm unlocked",
+          "historical_qwen": 0.113,
+          "historical_qwen_rerun": 0.113
+        },
+        {
+          "query": "spectre 24 inch monitor",
+          "historical_qwen": 0.036,
+          "historical_qwen_rerun": 0.036
+        }
+      ]
+    }
+  }
+}

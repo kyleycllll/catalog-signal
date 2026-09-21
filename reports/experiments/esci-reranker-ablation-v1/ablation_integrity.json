@@ -1,0 +1,35 @@
+{
+  "provenance": {
+    "timestamp_utc": "2026-09-21T20:04:21.454146+00:00",
+    "git_commit": "b54dd1e32c0da50a4c10b6e282cd6bd4bd618ea6",
+    "git_tracked_changes_uncommitted": false,
+    "python": "3.12.14",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "library_versions": {
+      "numpy": "2.5.3"
+    }
+  },
+  "checks": {
+    "training_rows_are_prepared_train_queries_only": true,
+    "validation_pairs_are_validation_queries_only": true,
+    "hard_negatives_mined_from_train_only": true,
+    "mined_file_hash_matches_manifest": true,
+    "B_E_and_S_rows_identical_to_A": true,
+    "A_and_B_same_size_and_label_counts": true,
+    "training_data_files_unchanged": true,
+    "selection_committed_to_git": true,
+    "selected_models_match_tested_models": true,
+    "fixed_candidates_unchanged": true,
+    "all_test_runs_same_candidates_and_query_ids": true,
+    "comparison_uses_200_queries": true,
+    "historical_rerun_identical_to_saved_historical": true
+  },
+  "all_passed": true,
+  "selection_commit": [
+    "b54dd1e32c0da50a4c10b6e282cd6bd4bd618ea6",
+    "1790015993"
+  ],
+  "first_new_test_run_utc": "2026-09-21T18:40:38.109817+00:00",
+  "note": "The validation selection was committed (git) before the new systems' test runs; commit time and run timestamps are recorded here."
+}
