@@ -1,7 +1,7 @@
 [project]
-name = "adaptive-product-search-agent"
+name = "adaptive-product-search"
 version = "0.2.0"
-description = "Measured ESCI product-search retrieval and QLoRA relevance reranking"
+description = "Adaptive product search with indexed hybrid retrieval and MiniLM learning-to-rank"
 requires-python = ">=3.11"
 dependencies = [
   "fastapi>=0.115,<1.0",
@@ -16,7 +16,14 @@ dependencies = [
 [project.optional-dependencies]
 data = ["pandas>=2.2", "pyarrow>=17.0", "scikit-learn>=1.5"]
 retrieval = ["sentence-transformers>=3.0", "faiss-cpu>=1.8"]
-ml = ["transformers>=4.45", "torch>=2.4", "peft>=0.13", "datasets>=3.0", "bitsandbytes>=0.44"]
+ml = ["transformers>=4.45", "torch>=2.4"]
+serving = [
+  "pyarrow>=17.0",
+  "sentence-transformers>=3.0",
+  "faiss-cpu>=1.8",
+  "transformers>=4.45",
+  "torch>=2.4",
+]
 dev = ["pytest>=8.0"]
 
 [tool.pytest.ini_options]

@@ -1,1 +1,1 @@
-"""Measured product search with ESCI QLoRA reranking and explicit retrieval baselines."""
+"""Adaptive product search with indexed hybrid retrieval and MiniLM reranking."""

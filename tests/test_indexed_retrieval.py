@@ -99,6 +99,30 @@ def test_truncated_hybrid_fusion_is_exact_with_full_rank_lookup():
         assert [products[row].id for row in actual.rows] == [p.id for p in expected.products]
 
 
+def test_weighted_hybrid_uses_a_bounded_field_adjustment_callback():
+    products = make_catalog(40)
+    _, retriever = build(products, fusion_depth=20)
+    observed: list[int] = []
+
+    def boost(rows):
+        observed.extend(int(row) for row in rows)
+        return {int(rows[0]): 0.75}
+
+    actual = retriever.hybrid_search(
+        "black leather wallet",
+        5,
+        bm25_weight=0.8,
+        dense_weight=0.2,
+        field_boost=boost,
+        field_boost_depth=8,
+    )
+
+    assert len(observed) == 8
+    assert actual.field_score_adjustments == {observed[0]: 0.75}
+    assert len(actual.rows) == 5
+    assert actual.scores == sorted(actual.scores, reverse=True)
+
+
 def test_rank_helpers_break_ties_by_row():
     scores = np.array([0.0, 2.0, 1.0, 2.0, 0.0, 3.0])
     assert top_rows_by_score(scores, 4).tolist() == [5, 1, 3, 2]

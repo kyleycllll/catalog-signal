@@ -1,5 +1,0 @@
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 6135.12it/s]
-adapter {"device": "mps", "dtype": "bfloat16", "accuracy": 0.268, "macro_f1": 0.14647812977135066, "confusion_matrix": {"E": [121, 12, 0, 0], "S": [99, 11, 0, 1], "C": [117, 8, 2, 0], "I": [116, 13, 0, 0]}, "agreement_with_saved_colab_predictions": 0.634, "unparsed_generations": 0, "seconds": 260.16}
-Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 6231.07it/s]
-base {"device": "mps", "dtype": "bfloat16", "accuracy": 0.256, "macro_f1": 0.10223642172523964, "confusion_matrix": {"E": [0, 0, 1, 132], "S": [0, 0, 0, 111], "C": [1, 0, 0, 126], "I": [0, 1, 0, 128]}, "agreement_with_saved_colab_predictions": 0.95, "unparsed_generations": 497, "seconds": 266.93}

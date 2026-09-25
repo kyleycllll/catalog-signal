@@ -1,4 +1,4 @@
-"""Create matched ESCI baseline and hard-negative QLoRA training JSONL files."""
+"""Create matched ESCI baseline and hard-negative training JSONL files."""
 from __future__ import annotations
 
 import argparse

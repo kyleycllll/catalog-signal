@@ -30,49 +30,6 @@
       "query_sample": "stable_sample(seed) over validation queries"
     }
   },
-  "qwen": {
-    "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
-    "quantization": "4-bit NF4 double-quantized base, emulated (quantize->dequantize round trip of every base Linear except lm_head; bitsandbytes has no Apple-silicon backend). Base frozen in fp16; LoRA weights fp32.",
-    "prompt": "local_reranker.classification_prompt (byte-identical to the notebook serving prompt)",
-    "target": "{\"label\":\"X\"} appended after the prompt, as in the notebook",
-    "loss": "completion-only (prompt tokens masked). The historical run used full-text loss.",
-    "max_length": 1024,
-    "truncation": "never truncates the label: prompts longer than max_length have the description, then bullet points, shortened until prompt+target fit",
-    "lora": {
-      "r": 16,
-      "alpha": 32,
-      "dropout": 0.05,
-      "target_modules": [
-        "q_proj",
-        "k_proj",
-        "v_proj",
-        "o_proj"
-      ],
-      "bias": "none"
-    },
-    "optimizer": "AdamW (torch), weight_decay 0.0",
-    "learning_rate": 0.0002,
-    "scheduler": "cosine",
-    "warmup_ratio": 0.05,
-    "per_device_batch_size": 4,
-    "gradient_accumulation": 4,
-    "epochs": 1,
-    "max_grad_norm": 1.0,
-    "length_grouping": "shuffled mega-batches of 64 rows sorted by length (padding efficiency)",
-    "checkpoint_fractions": [
-      0.5,
-      1.0
-    ],
-    "selection": "checkpoint with the higher VALIDATION macro-F1 on validation_pairs (ties -> later checkpoint)",
-    "generation": {
-      "decoding": "greedy",
-      "max_new_tokens": 16,
-      "max_length": 1536,
-      "batch_size": 8,
-      "parse": "\"label\":\"X\" regex, fallback I",
-      "dtype": "float16"
-    }
-  },
   "cross_encoder": {
     "model": "cross-encoder/ms-marco-MiniLM-L6-v2",
     "why": "One compact discriminative baseline: a 22M-parameter BERT cross-encoder already trained for query-passage relevance (MS MARCO), fine-tuned with a new 4-way ESCI head.",
@@ -80,7 +37,7 @@
     "max_length": 256,
     "head": "4-way softmax over E/S/C/I (new, randomly initialised)",
     "loss": "cross-entropy",
-    "training_data": "both TRAIN variants (A_balanced_random, B_hard_negative), trained separately with identical settings; changed from 'the variant selected for Qwen' before any cross-encoder or Qwen validation result existed, so the baseline does not wait on ~7 h of Qwen training",
+    "training_data": "both TRAIN variants (A_balanced_random, B_hard_negative), trained separately with identical settings.",
     "learning_rate": 2e-05,
     "batch_size": 32,
     "epochs": 3,
@@ -100,7 +57,7 @@
       10
     ],
     "bootstrap_samples": 2000,
-    "score_formula": "retrieval.rerank_with_sft: 0.8 * gain/3 + 0.2 * min-max normalized RRF score",
-    "pre_registered": "Both locally trained Qwen arms (A and B) and the cross-encoder are evaluated on test exactly once, after all training and selection decisions are frozen. The historical adapter's test results are reused unchanged from esci-us-heldout-v1."
+    "score_formula": "cross-encoder expected ESCI gain with indexed hybrid retrieval as a deterministic tie-breaker",
+    "pre_registered": "The selected cross-encoder is evaluated on test once after training and validation selection are frozen."
   }
 }

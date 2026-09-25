@@ -23,7 +23,7 @@ import math
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, Sequence
+from typing import Callable, Mapping, Sequence
 
 import numpy as np
 
@@ -111,6 +111,18 @@ class BM25Index:
             scores[rows] += idf * frequency * (self.k1 + 1) / denominator
         return scores
 
+    def lexical_rarity(self, query_terms: Sequence[str]) -> float | None:
+        """Mean BM25 IDF for recognized query terms, without scoring documents."""
+        values: list[float] = []
+        n = self.document_count
+        for term in dict.fromkeys(query_terms):
+            column = self.vocabulary.get(term)
+            if column is None:
+                continue
+            df = self.matrix.indptr[column + 1] - self.matrix.indptr[column]
+            values.append(math.log(1 + (n - df + 0.5) / (df + 0.5)))
+        return sum(values) / len(values) if values else None
+
 
 def top_rows_by_score(scores: np.ndarray, k: int) -> np.ndarray:
     """Rows of the top ``k`` scores ordered by (-score, row), including zero scores."""
@@ -148,6 +160,7 @@ class RetrievalResult:
     scores: list[float]
     component_ranks: dict[str, list[int]] | None = None
     timings_ms: dict[str, float] | None = None
+    field_score_adjustments: dict[int, float] | None = None
 
 
 class IndexedRetriever:
@@ -199,13 +212,47 @@ class IndexedRetriever:
         rows, scores = self._dense_top(self.encode_query(query), k)
         return RetrievalResult(rows=rows.tolist(), scores=[float(value) for value in scores])
 
-    def hybrid_search(self, query: str, k: int) -> RetrievalResult:
+    def lexical_rarity(self, query: str) -> float | None:
+        """Expose a lightweight lexical signal to the deterministic router."""
+        return self.bm25.lexical_rarity(self.tokenize(query))
+
+    def hybrid_search(
+        self,
+        query: str,
+        k: int,
+        *,
+        bm25_weight: float = 1.0,
+        dense_weight: float = 1.0,
+        field_boost: Callable[[Sequence[int]], Mapping[int, float]] | None = None,
+        field_boost_depth: int = 0,
+    ) -> RetrievalResult:
+        """Fuse indexed BM25 and dense rankings with optional bounded field boosts.
+
+        The optional boost only re-scores the leading lexical candidates supplied
+        to it; production uses that hook to inspect title, brand, and colour for
+        at most a small fixed number of rows.  It never scans catalog metadata.
+        """
         n = self.bm25.document_count
         depth = min(self.fusion_depth, n)
         if k > depth:
             raise ValueError("fusion_depth must be at least k")
+        if bm25_weight < 0 or dense_weight < 0 or bm25_weight + dense_weight <= 0:
+            raise ValueError("At least one non-negative retrieval weight is required")
+        if field_boost_depth < 0:
+            raise ValueError("field_boost_depth cannot be negative")
         clock = time.perf_counter()
         bm25_scores = self.bm25.scores(self.tokenize(query))
+        field_score_adjustments: dict[int, float] = {}
+        if field_boost is not None and field_boost_depth:
+            boost_rows = top_rows_by_score(bm25_scores, min(field_boost_depth, depth))
+            proposed = field_boost(boost_rows)
+            for row, adjustment in proposed.items():
+                row = int(row)
+                value = float(adjustment)
+                if row < 0 or row >= n or not math.isfinite(value) or value <= 0:
+                    continue
+                field_score_adjustments[row] = value
+                bm25_scores[row] += value
         bm25_top = top_rows_by_score(bm25_scores, depth)
         after_bm25 = time.perf_counter()
         query_vector = self.encode_query(query)
@@ -227,13 +274,16 @@ class IndexedRetriever:
                 dense_rank[int(row)] = int(rank)
 
         fused = {
-            int(row): 1.0 / (self.rrf_k + bm25_rank[int(row)]) + 1.0 / (self.rrf_k + dense_rank[int(row)])
+            int(row): (
+                bm25_weight / (self.rrf_k + bm25_rank[int(row)])
+                + dense_weight / (self.rrf_k + dense_rank[int(row)])
+            )
             for row in candidates
         }
         ordered = sorted(fused, key=lambda row: (-fused[row], row))[:k]
         # Any product outside both top-depth lists scores at most this bound; the
         # k-th fused score must exceed it for the truncated fusion to be exact.
-        outside_bound = 2.0 / (self.rrf_k + depth + 1)
+        outside_bound = (bm25_weight + dense_weight) / (self.rrf_k + depth + 1)
         if n > depth and len(ordered) == k and fused[ordered[-1]] <= outside_bound:
             raise RuntimeError("Fusion depth too shallow for an exact hybrid top-k")
         return RetrievalResult(
@@ -249,6 +299,7 @@ class IndexedRetriever:
                 "faiss_top_depth": (after_dense - after_encode) * 1000,
                 "exact_rank_lookup_and_fusion": (time.perf_counter() - after_dense) * 1000,
             },
+            field_score_adjustments=field_score_adjustments,
         )
 
     def search(self, strategy: str, query: str, k: int) -> RetrievalResult:

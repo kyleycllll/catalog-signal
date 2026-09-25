@@ -213,6 +213,23 @@ class FaissTextEmbeddingIndex:
             raise DenseIndexUnavailable("Embedding model output dimension differs from the persisted index")
         return np.ascontiguousarray(vector)
 
+    def query_vector(self, query: str) -> np.ndarray:
+        """Encode one normalized query for the persisted FAISS index."""
+        return self._query_vector(query)[0]
+
+    def vectors_view(self) -> np.ndarray:
+        """Return the IndexFlatIP vectors in catalog row order without copying.
+
+        ``IndexedRetriever`` needs the vectors only to calculate full-list ranks
+        for the small hybrid candidate union.  Production uses IndexFlatIP, whose
+        contiguous storage can be viewed through FAISS directly.
+        """
+        if self.metadata.backend != "faiss.IndexFlatIP" or not hasattr(self.index, "get_xb"):
+            raise DenseIndexUnavailable("Indexed hybrid retrieval requires a FAISS IndexFlatIP index")
+        faiss = self._faiss()
+        values = faiss.rev_swig_ptr(self.index.get_xb(), self.index.ntotal * self.index.d)
+        return np.asarray(values).reshape(self.index.ntotal, self.index.d)
+
     def search(
         self, query: str, top_k: int = 20, allowed_ids: set[str] | None = None
     ) -> list[tuple[str, float]]:

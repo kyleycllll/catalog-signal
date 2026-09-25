@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Any, Literal
+from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class RelevanceLabel(str, Enum):
@@ -14,18 +14,6 @@ class RelevanceLabel(str, Enum):
 
 
 RetrievalStrategy = Literal["bm25", "dense", "hybrid"]
-
-
-class Intent(BaseModel):
-    category: str | None = None
-    required_attributes: list[str] = Field(default_factory=list)
-    preferred_attributes: list[str] = Field(default_factory=list)
-    excluded_attributes: list[str] = Field(default_factory=list)
-    max_price: float | None = None
-    min_price: float | None = None
-    referenced_result: int | None = None
-    clarification_required: bool = False
-    search_strategy: list[str] = Field(default_factory=lambda: ["bm25", "sft_reranker"])
 
 
 class Product(BaseModel):
@@ -52,47 +40,11 @@ class Constraints(BaseModel):
     min_price: float | None = None
 
 
-class FeedbackKind(str, Enum):
-    like = "like"
-    dislike = "dislike"
-    save = "save"
-    not_relevant = "not_relevant"
-    too_expensive = "too_expensive"
-    wrong_style = "wrong_style"
-    wrong_category = "wrong_category"
-
-
-class FeedbackEvent(BaseModel):
-    product_id: str
-    kind: FeedbackKind
-    note: str | None = None
-
-
-class SessionState(BaseModel):
-    id: str
-    history: list[dict[str, str]] = Field(default_factory=list)
-    context_summary: str = ""
-    constraints: Constraints = Field(default_factory=Constraints)
-    prior_result_ids: list[str] = Field(default_factory=list)
-    selected_product_ids: list[str] = Field(default_factory=list)
-    rejected_product_ids: list[str] = Field(default_factory=list)
-    feedback: list[FeedbackEvent] = Field(default_factory=list)
-    traces: list[dict[str, Any]] = Field(default_factory=list)
-
-
 class SearchRequest(BaseModel):
-    message: str = Field(min_length=1, max_length=2000)
-    strategy: RetrievalStrategy = "hybrid"
-    rerank: bool = True
-    candidate_k: int = Field(default=40, ge=1, le=200)
+    """The deliberately small public contract for production product search."""
 
-
-class ModelPrediction(BaseModel):
-    product_id: str
-    label: RelevanceLabel
-    # Optional until the notebook produces a validation-calibrated probability estimate.
-    confidence: float | None = Field(default=None, ge=0, le=1)
-    rationale: str = ""
+    model_config = ConfigDict(extra="forbid")
+    query: str = Field(min_length=1, max_length=2000)
 
 
 class RankedResult(BaseModel):
@@ -103,40 +55,39 @@ class RankedResult(BaseModel):
     explanation: str = ""
 
 
-class Citation(BaseModel):
-    product_id: str
-    rank: int = Field(ge=1)
+class QueryAnalysisResponse(BaseModel):
+    original_query: str
+    normalized_query: str
+    retrieval_query: str
+    tokens: list[str]
+    brands: list[str]
+    colors: list[str]
+    model_tokens: list[str]
+    numeric_tokens: list[str]
+    exclusions: list[str]
+    contains_negation: bool
 
 
-class CitedAnswer(BaseModel):
-    answer: str
-    citations: list[Citation] = Field(default_factory=list)
+class RetrievalDecisionResponse(BaseModel):
+    """The internal, deterministic adaptive-fusion decision for a search."""
+
+    bm25_weight: float
+    dense_weight: float
+    lexical_rarity: float | None
+    reasons: list[str]
 
 
 class SearchResponse(BaseModel):
-    answer: str
-    citations: list[Citation]
-    parsed_intent: Intent
-    persistent_constraints: Constraints
-    tools_selected: list[str]
+    query: str
+    query_analysis: QueryAnalysisResponse
+    retrieval_decision: RetrievalDecisionResponse
     results: list[RankedResult]
-    model_version: str | None = None
-    model_kind: Literal["fine_tuned_adapter", "not_used"] = "fine_tuned_adapter"
     latency_ms: float
-    trace_id: str
-    retrieval_strategy: RetrievalStrategy
-    reranking_applied: bool
+    request_id: str
     candidate_count: int
     stage_latency_ms: dict[str, float] = Field(default_factory=dict)
-    index_version: str | None = None
-
-
-class ModelHealth(BaseModel):
-    status: Literal["ok"]
-    model_kind: Literal["fine_tuned_adapter"]
-    adapter_loaded: bool
     model_version: str
-    base_model: str
+    index_version: str
 
 
 class EvaluationCase(BaseModel):

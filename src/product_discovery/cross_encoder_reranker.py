@@ -1,19 +1,33 @@
 """Compact discriminative ESCI reranker: a MiniLM cross-encoder with a 4-way head.
 
-One forward pass per (query, product) pair returns E/S/C/I probabilities. It can be
-used two ways in ``retrieval.rerank_with_sft``-style scoring: the argmax label (same
-interface as the Qwen classifier), or the expected gain ``sum_c p(c) * gain(c)``,
-which gives a continuous relevance score. Product text uses the same fields and
-900-character caps as the Qwen prompt.
+One forward pass per (query, product) pair returns E/S/C/I probabilities.  Serving
+ranks by expected gain ``sum_c p(c) * gain(c)`` rather than an argmax label.
 """
 from __future__ import annotations
 
 from typing import Any, Mapping, Sequence
 
 from .evaluation import LABELS
-from .local_reranker import _clean, prompt_row
 from .reranker_training import expected_gain
-from .schemas import ModelHealth, ModelPrediction, Product, RelevanceLabel
+from .schemas import Product
+
+
+def _clean(value: object) -> str:
+    if value is None:
+        return ""
+    value = str(value)
+    return "" if value == "nan" else value
+
+
+def _product_row(query: str, product: Product) -> dict[str, str]:
+    return {
+        "query": query,
+        "product_title": product.title,
+        "product_brand": product.brand or "",
+        "product_color": product.colour or "",
+        "product_bullet_point": product.bullet_points or "",
+        "product_description": product.description,
+    }
 
 
 def cross_encoder_product_text(row: Mapping[str, Any]) -> str:
@@ -28,7 +42,7 @@ def cross_encoder_product_text(row: Mapping[str, Any]) -> str:
 
 
 class CrossEncoderReranker:
-    """Batched inference; ``rerank`` exposes the ModelClient surface (argmax label)."""
+    """Batched MiniLM inference for the one production reranking stage."""
 
     def __init__(self, model_dir: str, device: str | None = None, batch_size: int = 64, max_length: int = 256):
         import torch
@@ -59,19 +73,7 @@ class CrossEncoderReranker:
         return output
 
     def score_products(self, query: str, products: list[Product]) -> tuple[dict[str, str], dict[str, float], dict[str, list[float]]]:
-        probs = self.probabilities([query] * len(products), [prompt_row(query, p) for p in products])
+        probs = self.probabilities([query] * len(products), [_product_row(query, p) for p in products])
         labels = {p.id: LABELS[max(range(len(LABELS)), key=row.__getitem__)] for p, row in zip(products, probs)}
         gains = {p.id: expected_gain(row) for p, row in zip(products, probs)}
         return labels, gains, {p.id: row for p, row in zip(products, probs)}
-
-    async def health(self) -> ModelHealth:
-        return ModelHealth(status="ok", model_kind="fine_tuned_adapter", adapter_loaded=True,
-                           model_version=f"cross-encoder:{self.model_dir}", base_model=self.model_dir)
-
-    async def rerank(self, query: str, products: list[Product]) -> list[ModelPrediction]:
-        labels, _, probs = self.score_products(query, products)
-        return [
-            ModelPrediction(product_id=p.id, label=RelevanceLabel(labels[p.id]), confidence=max(probs[p.id]),
-                            rationale=f"Cross-encoder ESCI prediction: {labels[p.id]}")
-            for p in products
-        ]

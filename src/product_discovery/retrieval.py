@@ -1,4 +1,4 @@
-"""Transparent candidate generation and adapter-backed reranking."""
+"""Transparent reference candidate generation for offline retrieval baselines."""
 from __future__ import annotations
 
 import math
@@ -7,18 +7,9 @@ from collections import Counter
 from dataclasses import dataclass
 from typing import Protocol
 
-from .model_client import ModelClient
-from .schemas import Constraints, Product, RankedResult, RelevanceLabel, RetrievalStrategy, SessionState
+from .schemas import Constraints, Product, RetrievalStrategy
 
 
-LABEL_GAIN = {
-    RelevanceLabel.exact: 3.0,
-    RelevanceLabel.substitute: 2.0,
-    RelevanceLabel.complement: 1.0,
-    RelevanceLabel.irrelevant: 0.0,
-}
-# Backward-compatible normalized representation for callers that imported the old constant.
-LABEL_SCORE = {label: gain / 3.0 for label, gain in LABEL_GAIN.items()}
 RRF_K = 60
 
 
@@ -192,76 +183,3 @@ def retrieve(
         },
         strategy="hybrid",
     )
-
-
-def _normalise_retrieval(scores: dict[str, dict[str, float]], candidates: list[Product]) -> dict[str, float]:
-    raw = {product.id: scores.get(product.id, {}).get("retrieval", 0.0) for product in candidates}
-    finite = [value for value in raw.values() if math.isfinite(value)]
-    lower, upper = (min(finite), max(finite)) if finite else (0.0, 0.0)
-    if upper <= lower:
-        return {product_id: 0.0 for product_id in raw}
-    return {
-        product_id: (value - lower) / (upper - lower) if math.isfinite(value) else 0.0
-        for product_id, value in raw.items()
-    }
-
-
-def rank_without_reranker(candidates: CandidateSet) -> list[RankedResult]:
-    normalized = _normalise_retrieval(candidates.scores, candidates.products)
-    return [
-        RankedResult(
-            product=product,
-            score=round(normalized[product.id], 4),
-            scores={**candidates.scores.get(product.id, {}), "retrieval_normalized": round(normalized[product.id], 4)},
-            explanation=f"Retrieved by {candidates.strategy} candidate generation; QLoRA reranking was not requested.",
-        )
-        for product in candidates.products
-    ]
-
-
-async def rerank_with_sft(
-    query: str,
-    candidates: list[Product],
-    retrieval_scores: dict[str, dict[str, float]] | dict[str, float],
-    state: SessionState,
-    model: ModelClient,
-) -> list[RankedResult]:
-    if not candidates:
-        return []
-    # Older callers pass raw BM25 values. Preserve that public helper contract.
-    if retrieval_scores and isinstance(next(iter(retrieval_scores.values())), float):
-        retrieval_scores = {
-            product_id: {"bm25_raw": value, "retrieval": value}
-            for product_id, value in retrieval_scores.items()
-        }
-    predictions = {row.product_id: row for row in await model.rerank(query, candidates)}
-    normalized_retrieval = _normalise_retrieval(retrieval_scores, candidates)
-    results: list[RankedResult] = []
-    for product in candidates:
-        prediction = predictions[product.id]
-        gain = LABEL_GAIN[prediction.label]
-        relevance = gain / max(LABEL_GAIN.values())
-        feedback = 0.08 if product.id in state.selected_product_ids else (-0.12 if product.id in state.rejected_product_ids else 0.0)
-        score = 0.8 * relevance + 0.2 * normalized_retrieval[product.id] + feedback
-        explanation = prediction.rationale or {
-            RelevanceLabel.exact: "The fine-tuned reranker classified this as an exact match.",
-            RelevanceLabel.substitute: "The fine-tuned reranker classified this as a viable substitute.",
-            RelevanceLabel.complement: "The fine-tuned reranker classified this as a complementary product.",
-            RelevanceLabel.irrelevant: "The fine-tuned reranker found weak relevance.",
-        }[prediction.label]
-        results.append(
-            RankedResult(
-                product=product,
-                score=round(score, 4),
-                scores={
-                    **retrieval_scores.get(product.id, {}),
-                    "retrieval_normalized": round(normalized_retrieval[product.id], 4),
-                    "sft_gain": gain,
-                    "sft_relevance": round(relevance, 4),
-                    "feedback": feedback,
-                },
-                relevance_label=prediction.label,
-                explanation=explanation,
-            )
-        )
-    return sorted(results, key=lambda row: (-row.score, row.product.id))

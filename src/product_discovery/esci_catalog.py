@@ -37,6 +37,30 @@ class EsciCatalog:
     def fingerprint(self) -> str:
         return catalog_fingerprint_from_texts(zip(self.ids, self.texts))
 
+    def product_at(self, row: int) -> Product:
+        """Materialize one product from metadata already retained in memory.
+
+        Serving keeps the Product-schema columns once at startup and only creates
+        Pydantic objects for the small result set.  This avoids a parquet scan for
+        every request while avoiding 1.2M Pydantic model instances in memory.
+        """
+        if row < 0 or row >= len(self.ids):
+            raise IndexError(f"Catalog row {row} is outside the catalog")
+        def column(name: str, default: Any):
+            values = self.columns.get(name)
+            return values[row] if values is not None else default
+
+        record = {
+            "id": self.ids[row],
+            "title": column("title", ""),
+            "description": column("description", "") or "",
+            "bullet_points": column("bullet_points", None),
+            "brand": column("brand", None),
+            "colour": column("colour", None),
+            "locale": column("locale", "us") or "us",
+        }
+        return Product.model_validate(record)
+
 
 def load_catalog(path: str | Path, keep_columns: tuple[str, ...] = ("title",)) -> EsciCatalog:
     """Load a prepared parquet catalog and derive retrieval text for every row.

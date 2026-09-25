@@ -28,23 +28,5 @@
       "metric": "recall_at_40",
       "rule": "Pre-registered: the system with the highest mean validation Recall@40 over known E/S positives supplies the fixed candidate sets for reranking (ties resolved by list order). RRF k=60 is the implemented default and is not tuned."
     }
-  },
-  "reranking": {
-    "adapter": "models/esci-qwen-lora",
-    "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
-    "dtype": "float16",
-    "batch_size": 8,
-    "candidate_k": 40,
-    "max_queries": 200,
-    "query_sample": "sha256(seed:query_id) order over all evaluated test queries; fixed before any reranking result is seen",
-    "score_formula": "retrieval.rerank_with_sft: 0.8 * gain/3 + 0.2 * min-max normalized retrieval score (no session feedback)",
-    "ndcg_ks": [
-      5,
-      10
-    ],
-    "bootstrap_samples": 2000,
-    "base_weights": "nf4",
-    "max_queries_change": "Reduced from 300 to 200 before any reranking output existed: measured local throughput was 1.94 pairs/s (below the 2 pairs/s threshold set in advance), so 300x40 pairs would take ~1.7 h.",
-    "inference_fidelity": "Base weights emulate the Colab 4-bit NF4 double-quantized base with fp16 compute; on the 500 saved official-test pairs this agrees with the saved Colab adapter predictions 97.4% (macro-F1 0.2419 vs 0.2417). A bf16 full-precision base agreed only 63.4% and was rejected."
   }
 }

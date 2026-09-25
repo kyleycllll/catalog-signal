@@ -1,4 +1,3 @@
-import asyncio
 import json
 from pathlib import Path
 
@@ -9,30 +8,15 @@ from product_discovery.retrieval import (
     hard_filter,
     reciprocal_rank_fusion,
     retrieve,
-    rerank_with_sft,
     retrieve_candidates,
 )
-from product_discovery.schemas import Constraints, ModelPrediction, Product, RelevanceLabel, SessionState
+from product_discovery.schemas import Constraints, Product
 
 catalog = [Product.model_validate(row) for row in json.loads(Path("data/sample_esci_catalog.json").read_text())]
-
-
-class Reranker:
-    async def rerank(self, query, products):
-        return [ModelPrediction(product_id=p.id, label=RelevanceLabel.exact if p.id == "demo-backpack-1" else RelevanceLabel.irrelevant, confidence=.9) for p in products]
-
 
 def test_hard_filter_enforces_known_price_and_required_attribute():
     results = hard_filter(catalog, Constraints(category="backpack", required_attributes=["black"], max_price=80))
     assert {product.id for product in results} == {"demo-backpack-1"}
-
-
-def test_fine_tuned_score_dominates_bm25_reranking():
-    candidates, bm25 = retrieve_candidates("university black backpack", catalog, Constraints())
-    results = asyncio.run(rerank_with_sft("university black backpack", candidates, bm25, SessionState(id="x"), Reranker()))
-    assert results[0].product.id == "demo-backpack-1"
-    assert results[0].scores["sft_relevance"] > results[0].scores["bm25_raw"] * 0
-
 
 def test_dense_and_hybrid_retrieval_preserve_hard_constraints():
     products = [

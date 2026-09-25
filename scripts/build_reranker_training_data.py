@@ -1,6 +1,6 @@
 """Build the matched reranker training variants and the validation selection set.
 
-* ``A_balanced_random``: the historical data approach, ``rows_per_label`` random
+* ``A_balanced_random``: a class-balanced random baseline, ``rows_per_label`` random
   prepared-TRAIN pairs per ESCI label.
 * ``B_hard_negative``: the *same* E and S rows as A; the I and C rows are replaced by
   retrieval-mined hard negatives (judged I/C products the hybrid retriever ranks in
@@ -71,7 +71,7 @@ def main() -> None:
     assert not (ids["train"] & ids["validation"]) and not (ids["train"] & ids["test"]) and not (ids["validation"] & ids["test"])
     train_by_id = {q["query_id"]: q for q in splits["train"]}
 
-    # ---- A: class-balanced random train pairs (historical data approach) ----
+    # ---- A: class-balanced random train pairs ----
     train_pairs = [
         {"query_id": q["query_id"], "query": q["query"], "product_id": pid, "label": label}
         for q in splits["train"] for pid, label in sorted(q["labels"].items())
